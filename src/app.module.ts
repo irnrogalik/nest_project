@@ -1,31 +1,40 @@
-import { APP_PIPE } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module, ValidationPipe, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import './boilerplate.polyfill';
 
-import { AuthController } from './controllers/auth.controller';
-import { ConfigService } from './providers/config.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { I18nJsonParser, I18nModule } from 'nestjs-i18n';
+import path from 'path';
+
 import { contextMiddleware } from './middlewares';
-import { CoreModule } from './core.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { MathModule } from './modules/math/math.module';
+import { UserModule } from './modules/user/user.module';
+import { ConfigService } from './shared/services/config.service';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
     imports: [
-        CoreModule.forRoot(),
+        AuthModule,
+        UserModule,
+        MathModule,
         TypeOrmModule.forRootAsync({
-            imports: [CoreModule],
-            useFactory: (configService: ConfigService) => configService.typeOrmConfig,
+            imports: [SharedModule],
+            useFactory: (configService: ConfigService) =>
+                configService.typeOrmConfig,
             inject: [ConfigService],
         }),
-    ],
-    controllers: [AuthController],
-    providers: [
-        {
-            provide: APP_PIPE,
-            useValue: new ValidationPipe({
-                whitelist: true, exceptionFactory: (errors) => {
-                errors[0].constraints.IsString = 'string';
+        I18nModule.forRootAsync({
+            useFactory: (configService: ConfigService) => ({
+                fallbackLanguage: configService.fallbackLanguage,
+                parserOptions: {
+                    path: path.join(__dirname, '/i18n/'),
+                    watch: configService.isDevelopment,
                 },
             }),
-        },
+            imports: [SharedModule],
+            parser: I18nJsonParser,
+            inject: [ConfigService],
+        }),
     ],
 })
 export class AppModule implements NestModule {
