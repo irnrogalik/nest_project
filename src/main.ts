@@ -6,10 +6,8 @@ import {
 } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
-import {
-    ExpressAdapter,
-    NestExpressApplication,
-} from '@nestjs/platform-express';
+import type { NestExpressApplication } from '@nestjs/platform-express';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import compression from 'compression';
 import RateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -21,7 +19,6 @@ import {
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
-import { QueryFailedFilter } from './filters/query-failed.filter';
 import { setupSwagger } from './setup-swagger';
 import { ConfigService } from './shared/services/config.service';
 import { SharedModule } from './shared/shared.module';
@@ -47,10 +44,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
     const reflector = app.get(Reflector);
 
-    app.useGlobalFilters(
-        new HttpExceptionFilter(reflector),
-        new QueryFailedFilter(reflector),
-    );
+    app.useGlobalFilters(new HttpExceptionFilter(reflector));
 
     app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 

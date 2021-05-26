@@ -1,5 +1,3 @@
-/* tslint:disable:naming-convention */
-
 import { Transform } from 'class-transformer';
 import { castArray, isNil, trim } from 'lodash';
 
