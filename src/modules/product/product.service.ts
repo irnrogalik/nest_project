@@ -1,19 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
 import type { PageDto } from '../../common/dto/PageDto';
-import { AwsS3Service } from '../../shared/services/aws-s3.service';
-import { ValidatorService } from '../../shared/services/validator.service';
+import type { ProductAddDto } from './dto/ProductAddDto';
 import type { ProductDto } from './dto/ProductDto';
 import type { ProductPageOptionsDto } from './dto/ProductPageOptionsDto';
+import type { ProductEntity } from './product.entity';
 import { ProductRepository } from './product.repository';
 
 @Injectable()
 export class ProductService {
-    constructor(
-        public readonly productRepository: ProductRepository,
-        public readonly validatorService: ValidatorService,
-        public readonly awsS3Service: AwsS3Service,
-    ) {}
+    constructor(public readonly productRepository: ProductRepository) {}
 
     async getProducts(
         pageOptionsDto: ProductPageOptionsDto,
@@ -26,5 +22,10 @@ export class ProductService {
         );
 
         return items.toPageDto(pageMetaDto);
+    }
+
+    async addProduct(productAddDto: ProductAddDto): Promise<ProductEntity> {
+        const product = this.productRepository.create(productAddDto);
+        return this.productRepository.save(product);
     }
 }

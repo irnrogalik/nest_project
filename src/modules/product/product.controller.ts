@@ -1,16 +1,19 @@
 import {
+    Body,
     Controller,
     Get,
     HttpCode,
     HttpStatus,
+    Post,
     Query,
     ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/PageDto';
 import { TranslationService } from '../../shared/services/translation.service';
-import type { ProductDto } from './dto/ProductDto';
+import { ProductAddDto } from './dto/ProductAddDto';
+import { ProductDto } from './dto/ProductDto';
 import { ProductPageOptionsDto } from './dto/ProductPageOptionsDto';
 import { ProductService } from './product.service';
 
@@ -34,5 +37,18 @@ export class ProductController {
         pageOptionsDto: ProductPageOptionsDto,
     ): Promise<PageDto<ProductDto>> {
         return this.productService.getProducts(pageOptionsDto);
+    }
+
+    @Post('add')
+    @HttpCode(HttpStatus.OK)
+    @ApiOkResponse({
+        type: ProductDto,
+        description: 'Product was successfully added',
+    })
+    async addProduct(
+        @Body() productAddDto: ProductAddDto,
+    ): Promise<ProductDto> {
+        const product = await this.productService.addProduct(productAddDto);
+        return product.toDto();
     }
 }

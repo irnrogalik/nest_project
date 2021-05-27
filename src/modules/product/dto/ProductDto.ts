@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
+import { ToDecimal } from '../../../decorators/amount.decorator';
 import type { ProductEntity } from '../product.entity';
 
 export class ProductDto extends AbstractDto {
@@ -8,6 +9,7 @@ export class ProductDto extends AbstractDto {
     name: string;
 
     @ApiPropertyOptional()
+    @ToDecimal()
     amount: number;
 
     constructor(product: ProductEntity) {

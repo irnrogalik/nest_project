@@ -5,11 +5,11 @@ export class createProductsTable1621975351516 implements MigrationInterface {
         await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS "products"
             (
-                "id"            SERIAL            PRIMARY KEY,
+                "id"            uuid              NOT NULL DEFAULT uuid_generate_v4(),
                 "created_at"    TIMESTAMP         NOT NULL DEFAULT now(),
                 "updated_at"    TIMESTAMP         NOT NULL DEFAULT now(),
                 "name"          character varying NOT NULL,
-                "amount"        DECIMAL(10, 0)    NOT NULL
+                "amount"        INT    NOT NULL
             )`);
         await queryRunner.query(`
             INSERT INTO "products" (name, amount)
