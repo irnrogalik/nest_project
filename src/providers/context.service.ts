@@ -1,7 +1,6 @@
 import requestContext from 'request-context';
 export class ContextService {
     private static readonly nameSpace = 'request';
-    private static authUserKey = 'user_key';
     private static languageKey = 'language_key';
 
     private static get<T>(key: string): T {
