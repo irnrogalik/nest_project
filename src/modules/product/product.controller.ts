@@ -11,7 +11,6 @@ import {
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/PageDto';
-import { TranslationService } from '../../shared/services/translation.service';
 import { ProductAddDto } from './dto/ProductAddDto';
 import { ProductDto } from './dto/ProductDto';
 import { ProductPageOptionsDto } from './dto/ProductPageOptionsDto';
@@ -20,10 +19,7 @@ import { ProductService } from './product.service';
 @Controller('products')
 @ApiTags('products')
 export class ProductController {
-    constructor(
-        private productService: ProductService,
-        private readonly translationService: TranslationService,
-    ) {}
+    constructor(private productService: ProductService) {}
 
     @Get()
     @HttpCode(HttpStatus.OK)
