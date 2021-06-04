@@ -3,14 +3,10 @@
 - [Architecture](#architecture)
   - [`.vscode`](#vscode)
   - [`docs`](#docs)
-  - [`.vuepress`](#vuepress)
   - [`src`](#src)
     - [`common`](#common)
     - [`decorators`](#decorators)
-    - [`interceptors`](#interceptors)
     - [`exception-filters`](#exception-filters)
-    - [`guards`](#guards)
-    - [`interfaces`](#interfaces)
     - [`migrations`](#migrations)
     - [`providers`](#providers)
     - [`shared`](#shared)
@@ -30,10 +26,6 @@ Settings and extensions specific to this project, for Visual Studio Code. See [t
 
 You found me! :wink:
 
-## `.vuepress`
-
-Documentation config and destination folder See [VuePress doc](https://vuepress.vuejs.org) for more
-
 ## `src`
 
 Where we keep all our source files.
@@ -46,21 +38,9 @@ Where we keep common typescript files, e.g. constants and DTOs.
 
 This folder contains all global [decorators](https://www.typescriptlang.org/docs/handbook/decorators.html).
 
-### `interceptors`
-
-Where we are keep [interceptors](https://docs.nestjs.com/interceptors)
-
 ### `exception-filters`
 
 In this folder you can find app level [exception-filters](https://docs.nestjs.com/exception-filters).
-
-### `guards`
-
-You can store all guards here
-
-### `interfaces`
-
-This folder contains typescript [interfaces](https://www.typescriptlang.org/docs/handbook/interfaces.html)
 
 ### `migrations`
 
