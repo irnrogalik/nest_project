@@ -1,23 +1,23 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
     Post,
-    Query,
-    ValidationPipe,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { PageDto } from '../../common/dto/PageDto';
+import { UUIDParam } from '../../decorators/uuid.decorators';
 import { ProductAddDto } from './dto/ProductAddDto';
 import { ProductDto } from './dto/ProductDto';
-import { ProductPageOptionsDto } from './dto/ProductPageOptionsDto';
+import type { ProductEntity } from './product.entity';
 import { ProductService } from './product.service';
 
-@Controller('products')
-@ApiTags('products')
+@Controller('product')
+@ApiTags('product')
 export class ProductController {
     constructor(private productService: ProductService) {}
 
@@ -28,11 +28,8 @@ export class ProductController {
         description: 'Get products list',
         type: PageDto,
     })
-    getProducts(
-        @Query(new ValidationPipe({ transform: true }))
-        pageOptionsDto: ProductPageOptionsDto,
-    ): Promise<PageDto<ProductDto>> {
-        return this.productService.getProducts(pageOptionsDto);
+    getProductList(): Promise<PageDto<ProductDto>> {
+        return this.productService.getProductList();
     }
 
     @Post('add')
@@ -44,7 +41,19 @@ export class ProductController {
     async addProduct(
         @Body() productAddDto: ProductAddDto,
     ): Promise<ProductDto> {
-        const product = await this.productService.addProduct(productAddDto);
-        return product.toDto();
+        const product: ProductEntity = await this.productService.addProduct(
+            productAddDto,
+        );
+        return product;
+    }
+
+    @Delete('remove/:id')
+    @HttpCode(HttpStatus.OK)
+    @ApiOkResponse({
+        type: ProductDto,
+        description: 'Product was successfully removed',
+    })
+    removeProduct(@UUIDParam('id') productId: string): Promise<ProductDto> {
+        return this.productService.removeProduct(productId);
     }
 }
