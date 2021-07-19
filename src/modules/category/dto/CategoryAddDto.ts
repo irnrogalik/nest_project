@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { Trim } from '../../../decorators/transforms.decorator';
 
@@ -10,9 +10,7 @@ export class CategoryAddDto {
     @Trim()
     name: string;
 
-    @ApiProperty()
-    @IsUUID()
-    @IsNotEmpty()
-    @Trim()
+    @ApiPropertyOptional()
+    @IsOptional()
     taxId: string;
 }

@@ -7,7 +7,7 @@ import type { ProductCategoryAddDto } from './dto/ProductCategoryAddDto';
 import type { ProductCategoryDto } from './dto/ProductCategoryDto';
 import type { ProductDto } from './dto/ProductDto';
 import type { ProductTaxDto } from './dto/ProductTaxDto';
-import type { ProductEntity } from './product.entity';
+import type { ProductEntity } from './entity/product.entity';
 import { ProductRepository } from './product.repository';
 
 @Injectable()
@@ -15,18 +15,19 @@ export class ProductService {
     entityManager = getManager();
     constructor(public readonly productRepository: ProductRepository) {}
 
-    async getProductList(): Promise<PageDto<ProductDto>> {
-        const products = await this.entityManager.query(
-            'SELECT * FROM product',
-        );
-        return products;
+    async getProductList(): Promise<ProductDto[]> {
+        try {
+            const products: ProductEntity[] = await this.productRepository.getProductList();
+            return products;
+        } catch (e) {
+            throw new Error(e);
+        }
     }
 
-    async addProduct(productAddDto: ProductAddDto): Promise<ProductEntity> {
+    async addProduct(productAddDto: ProductAddDto): Promise<ProductDto> {
         try {
-            const product: ProductEntity = await this.productRepository.query(
-                'INSERT INTO product (name, amount) VALUES ($1, $2) RETURNING *',
-                [productAddDto.name, productAddDto.amount],
+            const product: ProductEntity = await this.productRepository.addProduct(
+                productAddDto,
             );
             return product;
         } catch (e) {
@@ -36,39 +37,33 @@ export class ProductService {
 
     async removeProduct(productId: string): Promise<any> {
         try {
-            return await this.productRepository.query(
-                'DELETE FROM product WHERE id = $1',
-                [productId],
-            );
+            return await this.productRepository.removeProduct(productId);
         } catch (e) {
             throw new Error(e);
         }
     }
 
     async getProductCategoryList(): Promise<PageDto<ProductCategoryDto>> {
-        const list = await this.productRepository.query(
-            `SELECT product.id AS productId, product.name AS productName,
-                array_agg(category.id) AS categoryId, array_agg(category.name) AS categoryName
-            FROM product_category
-            LEFT JOIN product ON product.id = product_category.product_id
-            LEFT JOIN category ON category.id = product_category.category_id
-            GROUP BY product.id;`,
-        );
-        return list;
+        try {
+            return await this.productRepository.getProductCategoryList();
+        } catch (e) {
+            throw new Error(e);
+        }
     }
 
     async addProductIntoCategory(
         productCategoryAddDto: ProductCategoryAddDto,
-    ): Promise<ProductCategoryDto> {
+    ): Promise<void> {
         try {
-            const productCategory = await this.productRepository.query(
-                'INSERT INTO product_category (product_id, category_id) VALUES ($1, $2) RETURNING *',
-                [
-                    productCategoryAddDto.productId,
-                    productCategoryAddDto.categoryId,
-                ],
-            );
-            return productCategory;
+            for (const categoryId of productCategoryAddDto.categories) {
+                const productCategoryDto: Partial<ProductCategoryDto> = {
+                    productId: productCategoryAddDto.productId,
+                    categoryId,
+                };
+                await this.productRepository.addProductIntoCategory(
+                    productCategoryDto,
+                );
+            }
         } catch (e) {
             throw new Error(e);
         }

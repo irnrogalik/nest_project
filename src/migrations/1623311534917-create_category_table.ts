@@ -9,7 +9,7 @@ export class createCategoryTable1623311534917 implements MigrationInterface {
                 "created_at"    TIMESTAMP         NOT NULL DEFAULT now(),
                 "updated_at"    TIMESTAMP         NOT NULL DEFAULT now(),
                 "name"          character varying NOT NULL,
-                "taxId"        uuid,
+                "tax_id"        uuid,
                 PRIMARY KEY(id),
                 CONSTRAINT fk_taxId_for_category
                     FOREIGN KEY(tax_id)

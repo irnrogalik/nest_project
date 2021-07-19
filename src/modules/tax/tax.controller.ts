@@ -1,7 +1,6 @@
 import {
     Body,
     Controller,
-    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -28,7 +27,18 @@ export class TaxController {
         description: 'Get tax list',
         type: PageDto,
     })
-    getFullTaxes(): Promise<PageDto<TaxDto>> {
+    getFullTaxes(): Promise<TaxDto[]> {
+        return this.taxService.getFullTaxes();
+    }
+
+    @Get('get')
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Get tax list',
+        type: PageDto,
+    })
+    getTaxes(): Promise<TaxDto[]> {
         return this.taxService.getTaxes();
     }
 
@@ -43,7 +53,7 @@ export class TaxController {
         return tax;
     }
 
-    @Delete('remove/:id')
+    @Post('remove/:id')
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         type: TaxDto,

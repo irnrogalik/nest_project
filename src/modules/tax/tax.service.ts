@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import type { PageDto } from '../../common/dto/PageDto';
 import type { TaxAddDto } from './dto/TaxAddDto';
 import type { TaxDto } from './dto/TaxDto';
 import type { TaxEntity } from './tax.entity';
@@ -10,23 +9,25 @@ import { TaxRepository } from './tax.repository';
 export class TaxService {
     constructor(public readonly taxRepository: TaxRepository) {}
 
-    async getFullTaxes(): Promise<PageDto<TaxDto>> {
-        const taxes = await this.taxRepository.query('SELECT * FROM tax');
-        return taxes;
+    async getFullTaxes(): Promise<TaxDto[]> {
+        try {
+            return await this.taxRepository.getFullTaxes();
+        } catch (e) {
+            throw new Error(e);
+        }
     }
 
-    async getTaxes(): Promise<PageDto<TaxDto>> {
-        const taxes = await this.taxRepository.query('SELECT * FROM getTaxes');
-        return taxes;
+    async getTaxes(): Promise<TaxDto[]> {
+        try {
+            return await this.taxRepository.getTaxes();
+        } catch (e) {
+            throw new Error(e);
+        }
     }
 
     async addTax(taxAddDto: TaxAddDto): Promise<TaxEntity> {
         try {
-            const tax: TaxEntity = await this.taxRepository.query(
-                'INSERT INTO tax (name, value, description) VALUES ($1, $2, $3) RETURNING *',
-                [taxAddDto.name, taxAddDto.value, taxAddDto.description],
-            );
-            return tax;
+            return await this.taxRepository.addTax(taxAddDto);
         } catch (e) {
             throw new Error(e);
         }
@@ -34,10 +35,7 @@ export class TaxService {
 
     async removeTax(taxId: string): Promise<any> {
         try {
-            return await this.taxRepository.query(
-                'DELETE FROM tax WHERE id = $1',
-                [taxId],
-            );
+            return await this.taxRepository.removeTax(taxId);
         } catch (e) {
             throw new Error(e);
         }

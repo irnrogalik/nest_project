@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsArray, IsNotEmpty, IsUUID } from 'class-validator';
 
 import { Trim } from '../../../decorators/transforms.decorator';
 
@@ -11,8 +11,6 @@ export class ProductCategoryAddDto {
     productId: string;
 
     @ApiProperty()
-    @IsUUID()
-    @IsNotEmpty()
-    @Trim()
-    categoryId: string;
+    @IsArray()
+    categories: string[];
 }

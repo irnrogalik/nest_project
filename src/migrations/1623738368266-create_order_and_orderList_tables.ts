@@ -9,7 +9,7 @@ export class createOrderAndOrderListTables1623738368266
                 "id"            uuid        NOT NULL DEFAULT uuid_generate_v4(),
                 "created_at"    TIMESTAMP   NOT NULL DEFAULT now(),
                 "updated_at"    TIMESTAMP   NOT NULL DEFAULT now(),
-                "orderTax"    INT         NOT NULL,
+                "order_tax"    INT         NOT NULL,
                 "total"         INT         NOT NULL,
                 PRIMARY KEY(id)
             );

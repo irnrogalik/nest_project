@@ -10,8 +10,11 @@ import type { AbstractEntity } from './common/abstract.entity';
 import type { AbstractDto } from './common/dto/AbstractDto';
 import { PageDto } from './common/dto/PageDto';
 declare global {
+    export type GetConstructorArgs<T> = T extends new (...args: infer U) => any
+        ? U
+        : never;
     interface Array<T> {
-        toDtos<T extends AbstractEntity<Dto>, Dto extends AbstractDto>(
+        toDtos<Entity extends AbstractEntity<Dto>, Dto extends AbstractDto>(
             this: T[],
             options?: any,
         ): Dto[];

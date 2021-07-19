@@ -1,13 +1,13 @@
 import { Transform } from 'class-transformer';
 
-export function ToInteger() {
+export function ToInteger(): PropertyDecorator {
     return Transform((params) => {
         const value = params.value;
-        return value * 100;
+        return value * 10 * 10;
     });
 }
 
-export function ToDecimal() {
+export function ToDecimal(): PropertyDecorator {
     return Transform((params) => {
         const value = params.value;
         return value / 100;

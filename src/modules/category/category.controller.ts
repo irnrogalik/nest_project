@@ -1,7 +1,6 @@
 import {
     Body,
     Controller,
-    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -27,7 +26,18 @@ export class CategoryController {
         description: 'Get category list',
         type: PageDto,
     })
-    getCategoryList(): Promise<PageDto<CategoryDto>> {
+    getCategoryListWithTaxes(): Promise<CategoryDto[]> {
+        return this.categoryService.getCategoryListWithTaxes();
+    }
+
+    @Get('get')
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Get category list',
+        type: PageDto,
+    })
+    getCategoryList(): Promise<CategoryDto[]> {
         return this.categoryService.getCategoryList();
     }
 
@@ -44,7 +54,7 @@ export class CategoryController {
         return category;
     }
 
-    @Delete('remove/:id')
+    @Post('remove/:id')
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         type: CategoryDto,

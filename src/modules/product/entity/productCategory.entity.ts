@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 
-import { AbstractEntity } from '../../common/abstract.entity';
-import { ProductCategoryDto } from './dto/ProductCategoryDto';
+import { AbstractEntity } from '../../../common/abstract.entity';
+import { ProductCategoryDto } from '../dto/ProductCategoryDto';
 
 @Entity({ name: 'productCategory' })
 export class ProductCategoryEntity extends AbstractEntity<ProductCategoryDto> {

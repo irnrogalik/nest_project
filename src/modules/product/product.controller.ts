@@ -1,7 +1,6 @@
 import {
     Body,
     Controller,
-    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -12,11 +11,9 @@ import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PageDto } from '../../common/dto/PageDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { ProductAddDto } from './dto/ProductAddDto';
-import { ProductCategoryAddDto } from './dto/ProductCategoryAddDto';
+import type { ProductCategoryAddDto } from './dto/ProductCategoryAddDto';
 import type { ProductCategoryDto } from './dto/ProductCategoryDto';
 import { ProductDto } from './dto/ProductDto';
-import type { ProductTaxDto } from './dto/ProductTaxDto';
-import type { ProductEntity } from './product.entity';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -31,7 +28,7 @@ export class ProductController {
         description: 'Get products list',
         type: PageDto,
     })
-    getProductList(): Promise<PageDto<ProductDto>> {
+    getProductList(): Promise<ProductDto[]> {
         return this.productService.getProductList();
     }
 
@@ -44,13 +41,26 @@ export class ProductController {
     async addProduct(
         @Body() productAddDto: ProductAddDto,
     ): Promise<ProductDto> {
-        const product: ProductEntity = await this.productService.addProduct(
+        const product: ProductDto = await this.productService.addProduct(
             productAddDto,
         );
+        if (
+            product &&
+            productAddDto.categories &&
+            productAddDto.categories.length > 0
+        ) {
+            const productCategoryAddDto: ProductCategoryAddDto = {
+                productId: product[0].id,
+                categories: productAddDto.categories,
+            };
+            await this.productService.addProductIntoCategory(
+                productCategoryAddDto,
+            );
+        }
         return product;
     }
 
-    @Delete('remove/:id')
+    @Post('remove/:id')
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         type: ProductDto,
@@ -69,31 +79,5 @@ export class ProductController {
     })
     getProductCategoryList(): Promise<PageDto<ProductCategoryDto>> {
         return this.productService.getProductCategoryList();
-    }
-
-    @Post('/productCategory/add')
-    @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Add product into category',
-        type: PageDto,
-    })
-    addProductIntoCategory(
-        @Body() productCategoryAddDto: ProductCategoryAddDto,
-    ): Promise<ProductCategoryDto> {
-        return this.productService.addProductIntoCategory(
-            productCategoryAddDto,
-        );
-    }
-
-    @Get('/productTax')
-    @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Get productTax list',
-        type: PageDto,
-    })
-    getProductTaxList(): Promise<PageDto<ProductTaxDto>> {
-        return this.productService.getProductTaxList();
     }
 }

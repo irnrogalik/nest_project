@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
-import type { ProductTaxEntity } from '../productTax.entity';
+import type { ProductTaxEntity } from '../entity/productTax.entity';
 
 export class ProductTaxDto extends AbstractDto {
     @ApiPropertyOptional()
