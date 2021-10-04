@@ -6,13 +6,18 @@ import {
     HttpStatus,
     Post,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiTags,
+} from '@nestjs/swagger';
 
-import { PageDto } from '../../common/dto/PageDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { TaxAddDto } from './dto/TaxAddDto';
 import { TaxDto } from './dto/TaxDto';
-import type { TaxEntity } from './tax.entity';
 import { TaxService } from './tax.service';
 
 @Controller('tax')
@@ -22,10 +27,12 @@ export class TaxController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Get tax list',
-        type: PageDto,
+    @ApiOkResponse({
+        description: 'Get full tax list',
+        type: TaxDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting full tax list',
     })
     getFullTaxes(): Promise<TaxDto[]> {
         return this.taxService.getFullTaxes();
@@ -33,33 +40,42 @@ export class TaxController {
 
     @Get('get')
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Get tax list',
-        type: PageDto,
+        type: TaxDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting tax list',
     })
     getTaxes(): Promise<TaxDto[]> {
         return this.taxService.getTaxes();
     }
 
     @Post('add')
-    @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({
-        type: TaxDto,
+    @HttpCode(HttpStatus.CREATED)
+    @ApiCreatedResponse({
         description: 'Tax was successfully added',
+        type: TaxDto,
     })
-    async addTax(@Body() taxAddDto: TaxAddDto): Promise<TaxDto> {
-        const tax: TaxEntity = await this.taxService.addTax(taxAddDto);
-        return tax;
+    @ApiBadRequestResponse({
+        description: 'Error occurred during adding tax',
+    })
+    addTax(@Body() taxAddDto: TaxAddDto): Promise<TaxDto> {
+        return this.taxService.addTax(taxAddDto);
     }
 
     @Post('remove/:id')
-    @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({
-        type: TaxDto,
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiNoContentResponse({
         description: 'Tax was successfully removed',
     })
-    removeTax(@UUIDParam('id') taxId: string): Promise<TaxDto> {
+    @ApiNotFoundResponse({
+        description: 'The tax was not found',
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during removing tax',
+    })
+    removeTax(@UUIDParam('id') taxId: string): Promise<void> {
         return this.taxService.removeTax(taxId);
     }
 }

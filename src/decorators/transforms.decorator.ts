@@ -11,7 +11,7 @@ import { castArray, isNil, trim } from 'lodash';
  * @returns {(target: any, key: string) => void}
  * @constructor
  */
-export function Trim() {
+export function Trim(): (target: any, key: string) => void {
     return Transform((params) => {
         const value = params.value;
         if (Array.isArray(value)) {
@@ -30,7 +30,7 @@ export function Trim() {
  * @returns {(target: any, key: string) => void}
  * @constructor
  */
-export function ToInt() {
+export function ToInt(): (target: any, key: string) => void {
     return Transform(
         (params) => {
             const value = params.value;

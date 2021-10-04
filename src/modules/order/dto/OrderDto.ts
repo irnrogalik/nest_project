@@ -1,13 +1,12 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-
 import { AbstractDto } from '../../../common/dto/AbstractDto';
+import { ToDecimal } from '../../../decorators/amount.decorator';
 import type { OrderEntity } from '../entity/order.entity';
 
 export class OrderDto extends AbstractDto {
-    @ApiPropertyOptional()
+    @ToDecimal()
     orderTax: number;
 
-    @ApiPropertyOptional()
+    @ToDecimal()
     total: number;
 
     constructor(order: OrderEntity) {

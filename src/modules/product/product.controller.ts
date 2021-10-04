@@ -6,14 +6,21 @@ import {
     HttpStatus,
     Post,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiResponse,
+    ApiTags,
+} from '@nestjs/swagger';
 
-import { PageDto } from '../../common/dto/PageDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { ProductAddDto } from './dto/ProductAddDto';
-import type { ProductCategoryAddDto } from './dto/ProductCategoryAddDto';
-import type { ProductCategoryDto } from './dto/ProductCategoryDto';
+import { ProductCategoryListDto } from './dto/ProductCategoryListDto';
 import { ProductDto } from './dto/ProductDto';
+import { ProductWithCategoryDto } from './dto/ProductWithCategoryDto';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -23,20 +30,26 @@ export class ProductController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Get products list',
-        type: PageDto,
+        type: ProductWithCategoryDto,
     })
-    getProductList(): Promise<ProductDto[]> {
-        return this.productService.getProductList();
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting product list',
+    })
+    async getProductList(): Promise<ProductWithCategoryDto[]> {
+        const products: ProductWithCategoryDto[] = await this.productService.getProductList();
+        return products;
     }
 
     @Post('add')
-    @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({
-        type: ProductDto,
+    @HttpCode(HttpStatus.CREATED)
+    @ApiCreatedResponse({
         description: 'Product was successfully added',
+        type: ProductDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during adding product',
     })
     async addProduct(
         @Body() productAddDto: ProductAddDto,
@@ -44,29 +57,21 @@ export class ProductController {
         const product: ProductDto = await this.productService.addProduct(
             productAddDto,
         );
-        if (
-            product &&
-            productAddDto.categories &&
-            productAddDto.categories.length > 0
-        ) {
-            const productCategoryAddDto: ProductCategoryAddDto = {
-                productId: product[0].id,
-                categories: productAddDto.categories,
-            };
-            await this.productService.addProductIntoCategory(
-                productCategoryAddDto,
-            );
-        }
         return product;
     }
 
     @Post('remove/:id')
-    @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({
-        type: ProductDto,
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiNoContentResponse({
         description: 'Product was successfully removed',
     })
-    removeProduct(@UUIDParam('id') productId: string): Promise<ProductDto> {
+    @ApiNotFoundResponse({
+        description: 'The product was not found',
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during removing product',
+    })
+    removeProduct(@UUIDParam('id') productId: string): Promise<void> {
         return this.productService.removeProduct(productId);
     }
 
@@ -74,10 +79,13 @@ export class ProductController {
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'Get productCategory list',
-        type: PageDto,
+        description: 'Get product category list',
+        type: ProductCategoryListDto,
     })
-    getProductCategoryList(): Promise<PageDto<ProductCategoryDto>> {
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting product category list',
+    })
+    getProductCategoryList(): Promise<ProductCategoryListDto[]> {
         return this.productService.getProductCategoryList();
     }
 }

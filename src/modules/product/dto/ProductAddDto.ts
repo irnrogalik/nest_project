@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { ToInteger } from '../../../decorators/amount.decorator';
 import { Trim } from '../../../decorators/transforms.decorator';
@@ -18,6 +18,7 @@ export class ProductAddDto {
     amount: number;
 
     @ApiProperty()
+    @IsOptional()
     @IsArray()
     categories: string[];
 }

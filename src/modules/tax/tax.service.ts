@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 
 import type { TaxAddDto } from './dto/TaxAddDto';
 import type { TaxDto } from './dto/TaxDto';
@@ -11,7 +15,8 @@ export class TaxService {
 
     async getFullTaxes(): Promise<TaxDto[]> {
         try {
-            return await this.taxRepository.getFullTaxes();
+            const taxes: TaxEntity[] = await this.taxRepository.getFullTaxes();
+            return taxes.toDtos();
         } catch (e) {
             throw new Error(e);
         }
@@ -19,25 +24,26 @@ export class TaxService {
 
     async getTaxes(): Promise<TaxDto[]> {
         try {
-            return await this.taxRepository.getTaxes();
+            const taxes: TaxEntity[] = await this.taxRepository.getTaxes();
+            return taxes.toDtos();
         } catch (e) {
             throw new Error(e);
         }
     }
 
-    async addTax(taxAddDto: TaxAddDto): Promise<TaxEntity> {
-        try {
-            return await this.taxRepository.addTax(taxAddDto);
-        } catch (e) {
-            throw new Error(e);
+    async addTax(taxAddDto: TaxAddDto): Promise<TaxDto> {
+        const tax: TaxEntity = await this.taxRepository.addTax(taxAddDto);
+        if (!tax) {
+            throw new BadRequestException(
+                `The tax ${taxAddDto.name} was not created`,
+            );
         }
+        return tax.toDto();
     }
 
-    async removeTax(taxId: string): Promise<any> {
-        try {
-            return await this.taxRepository.removeTax(taxId);
-        } catch (e) {
-            throw new Error(e);
+    async removeTax(taxId: string): Promise<void> {
+        if (!(await this.taxRepository.removeTax(taxId))) {
+            throw new NotFoundException(`The tax with id ${taxId} not found.`);
         }
     }
 }

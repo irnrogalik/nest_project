@@ -6,13 +6,20 @@ import {
     HttpStatus,
     Post,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiTags,
+} from '@nestjs/swagger';
 
-import { PageDto } from '../../common/dto/PageDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { CategoryService } from './category.service';
 import { CategoryAddDto } from './dto/CategoryAddDto';
 import { CategoryDto } from './dto/CategoryDto';
+import { CategoryListWithTaxesDto } from './dto/CategoryListWithTaxesDto';
 
 @Controller('category')
 @ApiTags('category')
@@ -21,31 +28,38 @@ export class CategoryController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Get category list',
-        type: PageDto,
+    @ApiOkResponse({
+        description: 'Get category list with taxes',
+        type: CategoryListWithTaxesDto,
     })
-    getCategoryListWithTaxes(): Promise<CategoryDto[]> {
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting category list with taxes',
+    })
+    getCategoryListWithTaxes(): Promise<CategoryListWithTaxesDto[]> {
         return this.categoryService.getCategoryListWithTaxes();
     }
 
     @Get('get')
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @ApiOkResponse({
         description: 'Get category list',
-        type: PageDto,
+        type: CategoryDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting category list',
     })
     getCategoryList(): Promise<CategoryDto[]> {
         return this.categoryService.getCategoryList();
     }
 
     @Post('add')
-    @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({
-        type: CategoryDto,
+    @HttpCode(HttpStatus.CREATED)
+    @ApiCreatedResponse({
         description: 'Category was successfully added',
+        type: CategoryDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during adding category',
     })
     async addCategory(
         @Body() categoryAddDto: CategoryAddDto,
@@ -55,12 +69,17 @@ export class CategoryController {
     }
 
     @Post('remove/:id')
-    @HttpCode(HttpStatus.OK)
-    @ApiOkResponse({
-        type: CategoryDto,
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiNoContentResponse({
         description: 'Category was successfully removed',
     })
-    removeCategory(@UUIDParam('id') categoryId: string): Promise<CategoryDto> {
+    @ApiNotFoundResponse({
+        description: 'The category was not found',
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during removing category',
+    })
+    removeCategory(@UUIDParam('id') categoryId: string): Promise<void> {
         return this.categoryService.removeCategory(categoryId);
     }
 }

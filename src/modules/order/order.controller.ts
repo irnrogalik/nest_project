@@ -6,12 +6,20 @@ import {
     HttpStatus,
     Post,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiResponse,
+    ApiTags,
+} from '@nestjs/swagger';
 
-import { PageDto } from '../../common/dto/PageDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import type { CartDto } from './dto/CartDto';
-import type { OrderDto } from './dto/OrderDto';
+import { CartFullDto } from './dto/CartFullDto';
+import { OrderDto } from './dto/OrderDto';
 import { OrderService } from './order.service';
 
 @Controller('order')
@@ -21,12 +29,15 @@ export class OrderController {
 
     @Get('')
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({
+    @ApiOkResponse({
         status: HttpStatus.OK,
         description: 'Get order list',
-        type: PageDto,
+        type: OrderDto,
     })
-    getOrderList(): Promise<PageDto<OrderDto>> {
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting order list',
+    })
+    getOrderList(): Promise<OrderDto[]> {
         return this.orderService.getOrderList();
     }
 
@@ -35,30 +46,40 @@ export class OrderController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Get product list in cart',
-        type: PageDto,
+        type: CartFullDto,
     })
-    getCart(@Body() cartDto: CartDto[]) {
+    @ApiBadRequestResponse({
+        description: 'Error occurred during getting cart',
+    })
+    getCart(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
         return this.orderService.getCart(cartDto);
     }
 
     @Post('add')
-    @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
-        description: 'Add order',
-        type: PageDto,
+    @HttpCode(HttpStatus.CREATED)
+    @ApiCreatedResponse({
+        description: 'Order was successfully added',
+        type: CartFullDto,
     })
-    addOrder(@Body() cartDto: CartDto[]) {
+    @ApiBadRequestResponse({
+        description: 'Error occurred during adding order',
+    })
+    addOrder(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
         return this.orderService.addOrder(cartDto);
     }
 
     @Post('remove/:id')
-    @HttpCode(HttpStatus.OK)
-    @ApiResponse({
-        status: HttpStatus.OK,
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiNoContentResponse({
         description: 'Order was successfully removed',
     })
-    removeOrder(@UUIDParam('id') orderId: string): Promise<OrderDto> {
+    @ApiNotFoundResponse({
+        description: 'The order was not found',
+    })
+    @ApiBadRequestResponse({
+        description: 'Error occurred during removing order',
+    })
+    removeOrder(@UUIDParam('id') orderId: string): Promise<void> {
         return this.orderService.removeOrder(orderId);
     }
 }
