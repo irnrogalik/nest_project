@@ -1,6 +1,6 @@
 export class ProductCategoryListDto {
-    productId: string;
-    categoryId: string[];
-    productName: string;
-    categoryName: string[];
+    productid: string;
+    categoryid: string[];
+    productname: string;
+    categoryname: string[];
 }

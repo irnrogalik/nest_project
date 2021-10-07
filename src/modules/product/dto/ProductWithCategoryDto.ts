@@ -14,5 +14,5 @@ export class ProductWithCategoryDto {
     amount: number;
 
     @ApiPropertyOptional()
-    categoryName: string[];
+    categoryname: string[];
 }

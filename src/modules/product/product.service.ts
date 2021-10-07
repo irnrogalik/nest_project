@@ -3,7 +3,6 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { getManager } from 'typeorm';
 
 import type { ProductAddDto } from './dto/ProductAddDto';
 import type { ProductCategoryAddDto } from './dto/ProductCategoryAddDto';
@@ -17,7 +16,6 @@ import { ProductRepository } from './product.repository';
 
 @Injectable()
 export class ProductService {
-    entityManager = getManager();
     constructor(public readonly productRepository: ProductRepository) {}
 
     async getProductList(): Promise<ProductWithCategoryDto[]> {
@@ -47,12 +45,13 @@ export class ProductService {
         return product.toDto();
     }
 
-    async removeProduct(productId: string): Promise<void> {
+    async removeProduct(productId: string): Promise<boolean> {
         if (!(await this.productRepository.removeProduct(productId))) {
             throw new NotFoundException(
                 `The product with id ${productId} not found.`,
             );
         }
+        return true;
     }
 
     async getProductCategoryList(): Promise<ProductCategoryListDto[]> {

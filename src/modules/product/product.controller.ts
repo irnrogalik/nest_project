@@ -71,8 +71,11 @@ export class ProductController {
     @ApiBadRequestResponse({
         description: 'Error occurred during removing product',
     })
-    removeProduct(@UUIDParam('id') productId: string): Promise<void> {
-        return this.productService.removeProduct(productId);
+    async removeProduct(@UUIDParam('id') productId: string): Promise<boolean> {
+        const result: boolean = await this.productService.removeProduct(
+            productId,
+        );
+        return result;
     }
 
     @Get('/productCategory')
@@ -85,7 +88,8 @@ export class ProductController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting product category list',
     })
-    getProductCategoryList(): Promise<ProductCategoryListDto[]> {
-        return this.productService.getProductCategoryList();
+    async getProductCategoryList(): Promise<ProductCategoryListDto[]> {
+        const products: ProductCategoryListDto[] = await this.productService.getProductCategoryList();
+        return products;
     }
 }
