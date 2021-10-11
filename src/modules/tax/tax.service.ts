@@ -41,9 +41,10 @@ export class TaxService {
         return tax.toDto();
     }
 
-    async removeTax(taxId: string): Promise<void> {
+    async removeTax(taxId: string): Promise<boolean> {
         if (!(await this.taxRepository.removeTax(taxId))) {
             throw new NotFoundException(`The tax with id ${taxId} not found.`);
         }
+        return true;
     }
 }

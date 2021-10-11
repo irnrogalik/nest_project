@@ -75,7 +75,8 @@ export class TaxController {
     @ApiBadRequestResponse({
         description: 'Error occurred during removing tax',
     })
-    removeTax(@UUIDParam('id') taxId: string): Promise<void> {
-        return this.taxService.removeTax(taxId);
+    async removeTax(@UUIDParam('id') taxId: string): Promise<boolean> {
+        const result: boolean = await this.taxService.removeTax(taxId);
+        return result;
     }
 }

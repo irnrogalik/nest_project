@@ -79,7 +79,12 @@ export class CategoryController {
     @ApiBadRequestResponse({
         description: 'Error occurred during removing category',
     })
-    removeCategory(@UUIDParam('id') categoryId: string): Promise<void> {
-        return this.categoryService.removeCategory(categoryId);
+    async removeCategory(
+        @UUIDParam('id') categoryId: string,
+    ): Promise<boolean> {
+        const result: boolean = await this.categoryService.removeCategory(
+            categoryId,
+        );
+        return result;
     }
 }

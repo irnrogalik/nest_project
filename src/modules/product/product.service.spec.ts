@@ -1,32 +1,32 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
+import { ProductRepository } from './product.repository';
 import {
     productWithCategory, productToAdd, productAddingResult,
-    productToRemove, productCategoryList
+    productToRemove, productCategoryList, productAddingResultDto
 } from './product.fixture';
 
-describe('ProductController', () => {
-    let productController: ProductController;
+describe('Product Service', () => {
     let productService: ProductService;
+    let productRepository: ProductRepository;
 
     beforeEach(async () => {
-        const ProductServiceProvider = {
-        provide: ProductService,
-        useFactory: () => ({
-            getProductList: jest.fn(() => productWithCategory),
-            addProduct: jest.fn(() => productAddingResult),
-            removeProduct: jest.fn(() => true),
-            getProductCategoryList: jest.fn(() => productCategoryList),
-        }),
+        const ProductRepositoryProvider = {
+            provide: ProductRepository,
+            useFactory: () => ({
+                getProductList: jest.fn(() => productWithCategory),
+                addProduct: jest.fn(() => productAddingResult),
+                addProductIntoCategory: jest.fn(() => true),
+                removeProduct: jest.fn(() => true),
+                getProductCategoryList: jest.fn(() => productCategoryList),
+            }),
         };
         const app: TestingModule = await Test.createTestingModule({
-            controllers: [ProductController],
-            providers: [ProductServiceProvider],
+            providers: [ProductRepositoryProvider, ProductService],
         }).compile();
 
-        productController = app.get<ProductController>(ProductController);
         productService = app.get<ProductService>(ProductService);
+        productRepository = app.get<ProductRepository>(ProductRepository);
     });
 
     describe('get product list', () => {
@@ -37,7 +37,7 @@ describe('ProductController', () => {
 
     describe('add product', () => {
         it('should return created product', async () => {
-            expect(await productService.addProduct(productToAdd)).toEqual(productAddingResult);
+            expect(await productService.addProduct(productToAdd)).toEqual(productAddingResultDto);
         });
     });
 

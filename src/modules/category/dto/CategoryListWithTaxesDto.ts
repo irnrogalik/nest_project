@@ -8,5 +8,5 @@ export class CategoryListWithTaxesDto {
     name: string;
 
     @ApiPropertyOptional()
-    taxName: string;
+    taxname: string;
 }

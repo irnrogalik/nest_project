@@ -43,11 +43,12 @@ export class CategoryService {
         return category.toDto();
     }
 
-    async removeCategory(categoryId: string): Promise<void> {
+    async removeCategory(categoryId: string): Promise<boolean> {
         if (!(await this.categoryRepository.removeCategory(categoryId))) {
             throw new NotFoundException(
                 `The category with id ${categoryId} not found.`,
             );
         }
+        return true;
     }
 }
