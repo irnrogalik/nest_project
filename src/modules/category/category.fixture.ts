@@ -98,7 +98,7 @@ export const getCategoryListEntity: CategoryEntity[] = plainToClass(
     ],
 );
 
-// export const getCategoryListDto: CategoryDto[] = getCategoryListEntity.toDtos();
+export const getCategoryListDto: CategoryDto[] = getCategoryListEntity.toDtos();
 
 export const categoryToAdd: CategoryAddDto = {
     name: 'new category',

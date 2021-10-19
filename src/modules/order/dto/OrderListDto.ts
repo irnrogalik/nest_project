@@ -1,14 +1,14 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
 
 export class OrderListDto extends AbstractDto {
-    @ApiPropertyOptional()
+    @ApiProperty()
     orderId: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     productId: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     quantity: number;
 }

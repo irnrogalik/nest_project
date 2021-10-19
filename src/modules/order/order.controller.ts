@@ -79,7 +79,7 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during removing order',
     })
-    removeOrder(@UUIDParam('id') orderId: string): Promise<void> {
+    removeOrder(@UUIDParam('id') orderId: string): Promise<boolean> {
         return this.orderService.removeOrder(orderId);
     }
 }

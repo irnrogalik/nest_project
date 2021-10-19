@@ -6,10 +6,10 @@ export class ProductWithCategoryDto {
     @ApiProperty()
     id: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     name: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     @ToDecimal()
     amount: number;
 

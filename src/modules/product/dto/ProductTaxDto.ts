@@ -1,13 +1,13 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
 import type { ProductTaxEntity } from '../entity/productTax.entity';
 
 export class ProductTaxDto extends AbstractDto {
-    @ApiPropertyOptional()
+    @ApiProperty()
     productId: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     taxId: string;
 
     constructor(productTax: ProductTaxEntity) {

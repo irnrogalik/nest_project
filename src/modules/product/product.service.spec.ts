@@ -1,10 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ProductService } from './product.service';
-import { ProductRepository } from './product.repository';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+
 import {
-    productWithCategory, productToAdd, productAddingResult,
-    productToRemove, productCategoryList, productAddingResultDto
+    productAddingResult,
+    productAddingResultDto,
+    productCategoryList,
+    productToAdd,
+    productToRemove,
+    productWithCategory,
 } from './product.fixture';
+import { ProductRepository } from './product.repository';
+import { ProductService } from './product.service';
 
 describe('Product Service', () => {
     let productService: ProductService;
@@ -31,25 +37,33 @@ describe('Product Service', () => {
 
     describe('get product list', () => {
         it('should return list of products', async () => {
-            expect(await productService.getProductList()).toEqual(productWithCategory);
+            expect(await productService.getProductList()).toEqual(
+                productWithCategory,
+            );
         });
     });
 
     describe('add product', () => {
         it('should return created product', async () => {
-            expect(await productService.addProduct(productToAdd)).toEqual(productAddingResultDto);
+            expect(await productService.addProduct(productToAdd)).toEqual(
+                productAddingResultDto,
+            );
         });
     });
 
     describe('remove product', () => {
         it('should return successful result', async () => {
-            expect(await productService.removeProduct(productToRemove)).toEqual(true);
+            expect(await productService.removeProduct(productToRemove)).toEqual(
+                true,
+            );
         });
     });
 
     describe('get product category list', () => {
         it('should return products that related to categories', async () => {
-            expect(await productService.getProductCategoryList()).toEqual(productCategoryList);
+            expect(await productService.getProductCategoryList()).toEqual(
+                productCategoryList,
+            );
         });
     });
 });

@@ -8,5 +8,12 @@ export function toInteger(value: number): number {
 }
 
 export function toDecimal(value: number): number {
-    return new Decimal(new Decimal(value || 0).dividedBy(100)).toNumber();
+    const result = new Decimal(new Decimal(value || 0).dividedBy(100)).toFixed(
+        2,
+    );
+    return stringToNumber(result);
+}
+
+function stringToNumber(amount: string): number {
+    return new Decimal(new Decimal(amount || 0)).toNumber();
 }

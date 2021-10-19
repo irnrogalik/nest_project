@@ -87,7 +87,7 @@ export class OrderService {
             const orderListDto: Partial<OrderListDto> = {
                 orderId,
                 productId: product.id,
-                quantity: product.quantity,
+                // quantity: product.quantity,
             };
             const isAdded: boolean = await this.orderRepository.addOrderList(
                 orderListDto,
@@ -100,11 +100,12 @@ export class OrderService {
         }
     }
 
-    async removeOrder(orderId: string): Promise<void> {
+    async removeOrder(orderId: string): Promise<boolean> {
         if (!(await this.orderRepository.removeOrder(orderId))) {
             throw new NotFoundException(
                 `The order with id ${orderId} not found.`,
             );
         }
+        return true;
     }
 }

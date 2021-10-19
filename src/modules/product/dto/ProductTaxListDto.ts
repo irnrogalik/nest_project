@@ -1,15 +1,15 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ProductTaxListDto {
-    @ApiPropertyOptional()
+    @ApiProperty()
     productId: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     productName: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     taxId: string[];
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     taxName: string[];
 }

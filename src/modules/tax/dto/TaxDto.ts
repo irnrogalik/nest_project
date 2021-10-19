@@ -1,13 +1,13 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
 import type { TaxEntity } from '../tax.entity';
 
 export class TaxDto extends AbstractDto {
-    @ApiPropertyOptional()
+    @ApiProperty()
     name: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     value: number;
 
     @ApiPropertyOptional()

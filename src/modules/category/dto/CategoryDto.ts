@@ -1,10 +1,10 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
 import type { CategoryEntity } from '../category.entity';
 
 export class CategoryDto extends AbstractDto {
-    @ApiPropertyOptional()
+    @ApiProperty()
     name: string;
 
     @ApiPropertyOptional()

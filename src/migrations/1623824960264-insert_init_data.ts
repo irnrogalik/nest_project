@@ -5,14 +5,14 @@ export class insertInitData1623824960264 implements MigrationInterface {
         await queryRunner.query(`
             INSERT INTO product (id, name, amount)
             VALUES
-                ('3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', '6lb bag of Skittles', 1600),
+                ('3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', '16lb bag of Skittles', 1600),
                 ('efd5dee6-81d4-4f03-8363-d8fd2fb394b5', 'Walkman', 9999),
-                ('109a6e18-4a19-45a3-91d1-7ff2b092fb49', 'Popcorn', 099),
-                ('cfd10d72-b4e8-4ea6-a65b-e381eb2c80be', 'Vanilla-Hazelnut Coffee', 1100),
-                ('c6245647-1c16-4ca8-9e01-629a75ae8b26', 'Vespa', 1500125),
-                ('da4b9065-550d-47d8-a196-ad4461664bde', 'crate of Almond Snickers', 7599),
+                ('109a6e18-4a19-45a3-91d1-7ff2b092fb49', 'bag of microwave Popcorn', 099),
+                ('cfd10d72-b4e8-4ea6-a65b-e381eb2c80be', 'imported bag of Vanilla-Hazelnut Coffee', 1100),
+                ('c6245647-1c16-4ca8-9e01-629a75ae8b26', 'imported Vespa', 1500125),
+                ('da4b9065-550d-47d8-a196-ad4461664bde', 'imported crate of Almond Snickers', 7599),
                 ('db4b0381-f0b5-4e92-b1ca-a8cf593983f4', 'Discman', 5500),
-                ('20e5412c-eb74-452a-a64d-8cfb095e169a', 'Bottle of Wine', 1000),
+                ('20e5412c-eb74-452a-a64d-8cfb095e169a', 'imported bottle of Wine', 1000),
                 ('8261b4fc-9d24-494b-809e-e410f50c5f67', '300# bag of Fair-Trade Coffee', 99799);
         `);
         await queryRunner.query(`

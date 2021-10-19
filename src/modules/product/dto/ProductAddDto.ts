@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { ToInteger } from '../../../decorators/amount.decorator';
@@ -17,7 +17,7 @@ export class ProductAddDto {
     @ToInteger()
     amount: number;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsOptional()
     @IsArray()
     categories: string[];

@@ -1,11 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CategoryService } from './category.service';
-import { CategoryRepository } from './category.repository';
+import '../../boilerplate.polyfill';
+
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+
 import {
-    getCategoryListWithTaxes, getCategoryListEntity,
-    categoryAddingResult, categoryAddingResultDto, categoryToRemove,
-    categoryToAdd
+    categoryAddingResult,
+    categoryAddingResultDto,
+    categoryToAdd,
+    categoryToRemove,
+    getCategoryListDto,
+    getCategoryListEntity,
+    getCategoryListWithTaxes,
 } from './category.fixture';
+import { CategoryRepository } from './category.repository';
+import { CategoryService } from './category.service';
 
 describe('Category Service', () => {
     let categoryService: CategoryService;
@@ -15,7 +23,9 @@ describe('Category Service', () => {
         const CategoryRepositoryProvider = {
             provide: CategoryRepository,
             useFactory: () => ({
-                getCategoryListWithTaxes: jest.fn(() => getCategoryListWithTaxes),
+                getCategoryListWithTaxes: jest.fn(
+                    () => getCategoryListWithTaxes,
+                ),
                 getCategoryList: jest.fn(() => getCategoryListEntity),
                 addCategory: jest.fn(() => categoryAddingResult),
                 removeCategory: jest.fn(() => true),
@@ -31,25 +41,33 @@ describe('Category Service', () => {
 
     describe('get category list with taxes', () => {
         it('should return list of category with taxes', async () => {
-            expect(await categoryService.getCategoryListWithTaxes()).toEqual(getCategoryListWithTaxes);
+            expect(await categoryService.getCategoryListWithTaxes()).toEqual(
+                getCategoryListWithTaxes,
+            );
         });
     });
 
-    // describe('get category list', () => {
-    //     it('should return list of category', async () => {
-    //         expect(await categoryService.getCategoryList()).toEqual(getCategoryListDto);
-    //     });
-    // });
+    describe('get category list', () => {
+        it('should return list of category', async () => {
+            expect(await categoryService.getCategoryList()).toEqual(
+                getCategoryListDto,
+            );
+        });
+    });
 
     describe('add category', () => {
         it('should return created category', async () => {
-            expect(await categoryService.addCategory(categoryToAdd)).toEqual(categoryAddingResultDto);
+            expect(await categoryService.addCategory(categoryToAdd)).toEqual(
+                categoryAddingResultDto,
+            );
         });
     });
 
     describe('remove category', () => {
         it('should return successful result', async () => {
-            expect(await categoryService.removeCategory(categoryToRemove)).toEqual(true);
+            expect(
+                await categoryService.removeCategory(categoryToRemove),
+            ).toEqual(true);
         });
     });
 });

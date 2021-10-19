@@ -1,10 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TaxService } from './tax.service';
-import { TaxRepository } from './tax.repository';
+import '../../boilerplate.polyfill';
+
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+
 import {
-    getFullTaxesEntity, getTaxesEntity, taxToRemove, taxAddingResult, taxAddingResultDto,
-    taxToAdd
+    listFullTaxesDto,
+    listFullTaxesEntity,
+    listTaxesDto,
+    listTaxesEntity,
+    taxAddingResult,
+    taxAddingResultDto,
+    taxToAdd,
+    taxToRemove,
 } from './tax.fixture';
+import { TaxRepository } from './tax.repository';
+import { TaxService } from './tax.service';
 
 describe('Tax Service', () => {
     let taxService: TaxService;
@@ -14,10 +24,10 @@ describe('Tax Service', () => {
         const TaxRepositoryProvider = {
             provide: TaxRepository,
             useFactory: () => ({
-                getFullTaxes: jest.fn(() => getFullTaxesEntity),
-                getTaxes: jest.fn(() => getTaxesEntity),
-                addTax: jest.fn(() => taxAddingResultDto),
-                removeTax: jest.fn(() => true)
+                getFullTaxes: jest.fn(() => listFullTaxesEntity),
+                getTaxes: jest.fn(() => listTaxesEntity),
+                addTax: jest.fn(() => taxAddingResult),
+                removeTax: jest.fn(() => true),
             }),
         };
         const app: TestingModule = await Test.createTestingModule({
@@ -28,23 +38,25 @@ describe('Tax Service', () => {
         taxRepository = app.get<TaxRepository>(TaxRepository);
     });
 
-    // describe('get full taxes list ', () => {
-    //     it('should return full list of taxes', async () => {
-    //         expect(await taxService.getFullTaxes()).toEqual(getFullTaxesDto);
-    //     });
-    // });
+    describe('get full taxes list ', () => {
+        it('should return full list of taxes', async () => {
+            expect(await taxService.getFullTaxes()).toEqual(listFullTaxesDto);
+        });
+    });
 
-    // describe('get taxes list', () => {
-    //     it('should return list of taxes', async () => {
-    //         expect(await taxService.getTaxes()).toEqual(getTaxesDto);
-    //     });
-    // });
+    describe('get taxes list', () => {
+        it('should return list of taxes', async () => {
+            expect(await taxService.getTaxes()).toEqual(listTaxesDto);
+        });
+    });
 
-    // describe('add taxes', () => {
-    //     it('should return created tax', async () => {
-    //         expect(await taxService.addTax(taxToAdd)).toEqual(taxAddingResultDto);
-    //     });
-    // });
+    describe('add taxes', () => {
+        it('should return created tax', async () => {
+            expect(await taxService.addTax(taxToAdd)).toEqual(
+                taxAddingResultDto,
+            );
+        });
+    });
 
     describe('remove tax', () => {
         it('should return successful result', async () => {

@@ -1,10 +1,10 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CategoryListWithTaxesDto {
-    @ApiPropertyOptional()
+    @ApiProperty()
     id: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     name: string;
 
     @ApiPropertyOptional()

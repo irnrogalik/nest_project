@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString, IsString } from 'class-validator';
+import {
+    IsNotEmpty,
+    IsNumberString,
+    IsOptional,
+    IsString,
+} from 'class-validator';
 
 import { Trim } from '../../../decorators/transforms.decorator';
 
@@ -17,6 +22,7 @@ export class TaxAddDto {
     value: number;
 
     @ApiProperty()
+    @IsOptional()
     @IsString()
     @IsNotEmpty()
     @Trim()

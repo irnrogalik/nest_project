@@ -4,7 +4,7 @@ import type { TaxAddDto } from './dto/TaxAddDto';
 import type { TaxDto } from './dto/TaxDto';
 import { TaxEntity } from './tax.entity';
 
-export const getFullTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
+export const listFullTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
     {
         id: '20bb00de-eda9-4014-994b-f54cd91b79f2',
         createdAt: new Date('2021-10-05T19:06:15.891Z'),
@@ -23,9 +23,9 @@ export const getFullTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
     },
 ]);
 
-// export const getFullTaxesDto: TaxDto[] = getFullTaxesEntity.toDtos();
+export const listFullTaxesDto: TaxDto[] = listFullTaxesEntity.toDtos();
 
-export const getTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
+export const listTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
     {
         id: '20bb00de-eda9-4014-994b-f54cd91b79f2',
         name: 'Basic sales',
@@ -36,7 +36,7 @@ export const getTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
     },
 ]);
 
-// export const getTaxesDto: TaxDto[] = getTaxesEntity.toDtos();
+export const listTaxesDto: TaxDto[] = listTaxesEntity.toDtos();
 
 export const taxToAdd: TaxAddDto = {
     name: 'new tsx',
