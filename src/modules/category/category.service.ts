@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { CategoryEntity } from './category.entity';
 import { CategoryRepository } from './category.repository';
 import type { CategoryAddDto } from './dto/CategoryAddDto';
@@ -14,21 +15,18 @@ import type { CategoryListWithTaxesDto } from './dto/CategoryListWithTaxesDto';
 export class CategoryService {
     constructor(public readonly categoryRepository: CategoryRepository) {}
 
-    async getCategoryListWithTaxes(): Promise<CategoryListWithTaxesDto[]> {
-        try {
-            return await this.categoryRepository.getCategoryListWithTaxes();
-        } catch (e) {
-            throw new Error(e);
-        }
+    async getCategoryListWithTaxes(
+        pageOptions: PageOptionsDto,
+    ): Promise<CategoryListWithTaxesDto[]> {
+        const getCategoryListWithTaxes: CategoryListWithTaxesDto[] = await this.categoryRepository.getCategoryListWithTaxes(
+            pageOptions,
+        );
+        return getCategoryListWithTaxes;
     }
 
     async getCategoryList(): Promise<CategoryDto[]> {
-        try {
-            const categories: CategoryEntity[] = await this.categoryRepository.getCategoryList();
-            return categories.toDtos();
-        } catch (e) {
-            throw new Error(e);
-        }
+        const categories: CategoryEntity[] = await this.categoryRepository.getCategoryList();
+        return categories.toDtos();
     }
 
     async addCategory(categoryAddDto: CategoryAddDto): Promise<CategoryDto> {

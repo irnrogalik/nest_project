@@ -8,6 +8,7 @@ import {
     listFullTaxesEntity,
     listTaxesDto,
     listTaxesEntity,
+    pageOptions,
     taxAddingResult,
     taxAddingResultDto,
     taxToAdd,
@@ -18,7 +19,6 @@ import { TaxService } from './tax.service';
 
 describe('Tax Service', () => {
     let taxService: TaxService;
-    let taxRepository: TaxRepository;
 
     beforeEach(async () => {
         const TaxRepositoryProvider = {
@@ -35,12 +35,13 @@ describe('Tax Service', () => {
         }).compile();
 
         taxService = app.get<TaxService>(TaxService);
-        taxRepository = app.get<TaxRepository>(TaxRepository);
     });
 
     describe('get full taxes list ', () => {
         it('should return full list of taxes', async () => {
-            expect(await taxService.getFullTaxes()).toEqual(listFullTaxesDto);
+            expect(await taxService.getFullTaxes(pageOptions)).toEqual(
+                listFullTaxesDto,
+            );
         });
     });
 

@@ -1,10 +1,13 @@
 import { plainToClass } from 'class-transformer';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { ProductInCartDto } from '../product/dto/ProductInCartDto';
 import type { CartDto } from './dto/CartDto';
 import type { CartFullDto } from './dto/CartFullDto';
 import type { OrderDto } from './dto/OrderDto';
 import { OrderEntity } from './entity/order.entity';
+
+export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
 export const cartDto: CartDto[] = [
     { id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', quantity: 1 },

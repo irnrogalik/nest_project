@@ -1,8 +1,11 @@
 import { plainToClass } from 'class-transformer';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { TaxAddDto } from './dto/TaxAddDto';
 import type { TaxDto } from './dto/TaxDto';
 import { TaxEntity } from './tax.entity';
+
+export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
 export const listFullTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
     {

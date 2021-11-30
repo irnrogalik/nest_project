@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { toDecimal, toInteger } from '../../shared/functions';
 import type { ProductInCartDto } from '../product/dto/ProductInCartDto';
 import type { CartDto } from './dto/CartDto';
@@ -17,23 +18,19 @@ import { OrderRepository } from './order.repository';
 export class OrderService {
     constructor(public readonly orderRepository: OrderRepository) {}
 
-    async getOrderList(): Promise<OrderDto[]> {
-        const orderList: OrderEntity[] = await this.orderRepository.getOrderList();
+    async getOrderList(pageOptions: PageOptionsDto): Promise<OrderDto[]> {
+        const orderList: OrderEntity[] = await this.orderRepository.getOrderList(
+            pageOptions,
+        );
         return orderList.toDtos();
     }
 
     async getCart(cartDto: CartDto[]): Promise<CartFullDto> {
-        try {
-            const products: ProductInCartDto[] = await this.orderRepository.getProductsInCart(
-                cartDto,
-            );
-            const cartList: CartFullDto = this.getFinalOrderListInCart(
-                products,
-            );
-            return cartList;
-        } catch (e) {
-            throw new Error(e);
-        }
+        const products: ProductInCartDto[] = await this.orderRepository.getProductsInCart(
+            cartDto,
+        );
+        const cartList: CartFullDto = this.getFinalOrderListInCart(products);
+        return cartList;
     }
 
     getFinalOrderListInCart(products: ProductInCartDto[]): CartFullDto {

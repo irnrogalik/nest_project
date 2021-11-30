@@ -11,13 +11,13 @@ import {
     getCategoryListDto,
     getCategoryListEntity,
     getCategoryListWithTaxes,
+    pageOptions,
 } from './category.fixture';
 import { CategoryRepository } from './category.repository';
 import { CategoryService } from './category.service';
 
 describe('Category Service', () => {
     let categoryService: CategoryService;
-    let categoryRepository: CategoryRepository;
 
     beforeEach(async () => {
         const CategoryRepositoryProvider = {
@@ -36,14 +36,13 @@ describe('Category Service', () => {
         }).compile();
 
         categoryService = app.get<CategoryService>(CategoryService);
-        categoryRepository = app.get<CategoryRepository>(CategoryRepository);
     });
 
     describe('get category list with taxes', () => {
         it('should return list of category with taxes', async () => {
-            expect(await categoryService.getCategoryListWithTaxes()).toEqual(
-                getCategoryListWithTaxes,
-            );
+            expect(
+                await categoryService.getCategoryListWithTaxes(pageOptions),
+            ).toEqual(getCategoryListWithTaxes);
         });
     });
 

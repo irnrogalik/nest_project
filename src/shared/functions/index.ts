@@ -17,3 +17,12 @@ export function toDecimal(value: number): number {
 function stringToNumber(amount: string): number {
     return new Decimal(new Decimal(amount || 0)).toNumber();
 }
+
+export function paginate(query: string, page?: number, take?: number): string {
+    if (!page) {
+        query = query.concat(' LIMIT ALL;');
+    } else {
+        query = query.concat(` LIMIT ${take} OFFSET ${(page - 1) * take}`);
+    }
+    return query;
+}

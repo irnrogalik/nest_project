@@ -1,9 +1,12 @@
 import { plainToClass } from 'class-transformer';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { CategoryEntity } from './category.entity';
 import type { CategoryAddDto } from './dto/CategoryAddDto';
 import type { CategoryDto } from './dto/CategoryDto';
 import type { CategoryListWithTaxesDto } from './dto/CategoryListWithTaxesDto';
+
+export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
 export const getCategoryListWithTaxes: CategoryListWithTaxesDto[] = [
     {

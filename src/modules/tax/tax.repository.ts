@@ -2,13 +2,17 @@ import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { paginate } from '../../shared/functions';
 import type { TaxAddDto } from './dto/TaxAddDto';
 import { TaxEntity } from './tax.entity';
 
 @EntityRepository(TaxEntity)
 export class TaxRepository extends Repository<TaxEntity> {
-    async getFullTaxes(): Promise<TaxEntity[]> {
-        const taxes: TaxEntity[] = await this.query('SELECT * FROM tax');
+    async getFullTaxes(pageOptions: PageOptionsDto): Promise<TaxEntity[]> {
+        const taxes: TaxEntity[] = await this.query(
+            paginate('SELECT * FROM tax', pageOptions.page, pageOptions.take),
+        );
         return plainToClass(TaxEntity, taxes);
     }
 

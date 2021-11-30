@@ -2,6 +2,8 @@ import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { paginate } from '../../shared/functions';
 import type { ProductAddDto } from './dto/ProductAddDto';
 import type { ProductCategoryDto } from './dto/ProductCategoryDto';
 import { ProductCategoryListDto } from './dto/ProductCategoryListDto';
@@ -11,9 +13,15 @@ import { ProductEntity } from './entity/product.entity';
 
 @EntityRepository(ProductEntity)
 export class ProductRepository extends Repository<ProductEntity> {
-    async getProductList(): Promise<ProductWithCategoryDto[]> {
+    async getProductList(
+        pageOptions: PageOptionsDto,
+    ): Promise<ProductWithCategoryDto[]> {
         const products: ProductWithCategoryDto[] = await this.query(
-            'SELECT * FROM getProductList()',
+            paginate(
+                'SELECT * FROM getProductList()',
+                pageOptions.page,
+                pageOptions.take,
+            ),
         );
         return plainToClass(ProductWithCategoryDto, products);
     }

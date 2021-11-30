@@ -1,10 +1,13 @@
 import { plainToClass } from 'class-transformer';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { ProductAddDto } from './dto/ProductAddDto';
 import type { ProductCategoryListDto } from './dto/ProductCategoryListDto';
 import type { ProductDto } from './dto/ProductDto';
 import type { ProductWithCategoryDto } from './dto/ProductWithCategoryDto';
 import { ProductEntity } from './entity/product.entity';
+
+export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
 export const productWithCategory: ProductWithCategoryDto[] = [
     {

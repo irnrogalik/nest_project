@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { ProductAddDto } from './dto/ProductAddDto';
 import type { ProductCategoryAddDto } from './dto/ProductCategoryAddDto';
 import type { ProductCategoryDto } from './dto/ProductCategoryDto';
@@ -18,12 +19,13 @@ import { ProductRepository } from './product.repository';
 export class ProductService {
     constructor(public readonly productRepository: ProductRepository) {}
 
-    async getProductList(): Promise<ProductWithCategoryDto[]> {
-        try {
-            return await this.productRepository.getProductList();
-        } catch (e) {
-            throw new Error(e);
-        }
+    async getProductList(
+        pageOptions: PageOptionsDto,
+    ): Promise<ProductWithCategoryDto[]> {
+        const productWithCategoryList: ProductWithCategoryDto[] = await this.productRepository.getProductList(
+            pageOptions,
+        );
+        return productWithCategoryList;
     }
 
     async addProduct(productAddDto: ProductAddDto): Promise<ProductDto> {
@@ -55,12 +57,8 @@ export class ProductService {
     }
 
     async getProductCategoryList(): Promise<ProductCategoryListDto[]> {
-        try {
-            const productCategoryList: ProductCategoryListDto[] = await this.productRepository.getProductCategoryList();
-            return productCategoryList;
-        } catch (e) {
-            throw new Error(e);
-        }
+        const productCategoryList: ProductCategoryListDto[] = await this.productRepository.getProductCategoryList();
+        return productCategoryList;
     }
 
     async addProductIntoCategory(
@@ -83,10 +81,7 @@ export class ProductService {
     }
 
     async getProductTaxList(): Promise<ProductTaxListDto[]> {
-        try {
-            return await this.productRepository.getProductTaxList();
-        } catch (e) {
-            throw new Error(e);
-        }
+        const productTaxList: ProductTaxListDto[] = await this.productRepository.getProductTaxList();
+        return productTaxList;
     }
 }

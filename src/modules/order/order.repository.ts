@@ -3,7 +3,8 @@ import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
-import { toInteger } from '../../shared/functions';
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { paginate, toInteger } from '../../shared/functions';
 import { ProductInCartDto } from '../product/dto/ProductInCartDto';
 import type { CartDto } from './dto/CartDto';
 import type { OrderDto } from './dto/OrderDto';
@@ -12,8 +13,14 @@ import { OrderEntity } from './entity/order.entity';
 
 @EntityRepository(OrderEntity)
 export class OrderRepository extends Repository<OrderEntity> {
-    async getOrderList(): Promise<OrderEntity[]> {
-        const list: OrderEntity[] = await this.query('SELECT * FROM "order"');
+    async getOrderList(pageOptions: PageOptionsDto): Promise<OrderEntity[]> {
+        const list: OrderEntity[] = await this.query(
+            paginate(
+                'SELECT * FROM "order"',
+                pageOptions.page,
+                pageOptions.take,
+            ),
+        );
         return plainToClass(OrderEntity, list);
     }
 

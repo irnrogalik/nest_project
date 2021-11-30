@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { TaxAddDto } from './dto/TaxAddDto';
 import type { TaxDto } from './dto/TaxDto';
 import type { TaxEntity } from './tax.entity';
@@ -13,22 +14,16 @@ import { TaxRepository } from './tax.repository';
 export class TaxService {
     constructor(public readonly taxRepository: TaxRepository) {}
 
-    async getFullTaxes(): Promise<TaxDto[]> {
-        try {
-            const taxes: TaxEntity[] = await this.taxRepository.getFullTaxes();
-            return taxes.toDtos();
-        } catch (e) {
-            throw new Error(e);
-        }
+    async getFullTaxes(pageOptions: PageOptionsDto): Promise<TaxDto[]> {
+        const taxes: TaxEntity[] = await this.taxRepository.getFullTaxes(
+            pageOptions,
+        );
+        return taxes.toDtos();
     }
 
     async getTaxes(): Promise<TaxDto[]> {
-        try {
-            const taxes: TaxEntity[] = await this.taxRepository.getTaxes();
-            return taxes.toDtos();
-        } catch (e) {
-            throw new Error(e);
-        }
+        const taxes: TaxEntity[] = await this.taxRepository.getTaxes();
+        return taxes.toDtos();
     }
 
     async addTax(taxAddDto: TaxAddDto): Promise<TaxDto> {

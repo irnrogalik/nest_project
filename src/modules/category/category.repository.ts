@@ -2,18 +2,26 @@ import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { paginate } from '../../shared/functions';
 import { CategoryEntity } from './category.entity';
 import type { CategoryAddDto } from './dto/CategoryAddDto';
 import { CategoryListWithTaxesDto } from './dto/CategoryListWithTaxesDto';
 
 @EntityRepository(CategoryEntity)
 export class CategoryRepository extends Repository<CategoryEntity> {
-    async getCategoryListWithTaxes(): Promise<CategoryListWithTaxesDto[]> {
+    async getCategoryListWithTaxes(
+        pageOptions: PageOptionsDto,
+    ): Promise<CategoryListWithTaxesDto[]> {
         const categoryList: CategoryListWithTaxesDto[] = await this.query(
-            `SELECT category.id, category.name, tax.name as taxName
+            paginate(
+                `SELECT category.id, category.name, tax.name as taxName
             FROM category
             LEFT JOIN tax ON category.tax_id = tax.Id
             ORDER BY category.created_at`,
+                pageOptions.page,
+                pageOptions.take,
+            ),
         );
         return plainToClass(CategoryListWithTaxesDto, categoryList);
     }

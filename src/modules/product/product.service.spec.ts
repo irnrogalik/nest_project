@@ -2,6 +2,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
 import {
+    pageOptions,
     productAddingResult,
     productAddingResultDto,
     productCategoryList,
@@ -14,7 +15,6 @@ import { ProductService } from './product.service';
 
 describe('Product Service', () => {
     let productService: ProductService;
-    let productRepository: ProductRepository;
 
     beforeEach(async () => {
         const ProductRepositoryProvider = {
@@ -32,12 +32,11 @@ describe('Product Service', () => {
         }).compile();
 
         productService = app.get<ProductService>(ProductService);
-        productRepository = app.get<ProductRepository>(ProductRepository);
     });
 
     describe('get product list', () => {
         it('should return list of products', async () => {
-            expect(await productService.getProductList()).toEqual(
+            expect(await productService.getProductList(pageOptions)).toEqual(
                 productWithCategory,
             );
         });

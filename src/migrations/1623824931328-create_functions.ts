@@ -21,7 +21,7 @@ export class createFunctions1623824931328 implements MigrationInterface {
             RETURNS TABLE ( id uuid, name character varying, amount int, categoryName text[])
             LANGUAGE SQL
             as $$
-                SELECT product.id, product.name, product.amount, array_agg(category.name) as categoryName
+                SELECT product.id, product.name, product.amount, array_agg(category.name)::text[] as categoryName
                 FROM product
                     LEFT JOIN product_category ON product.id = product_category.product_id
                     LEFT JOIN category on product_category.category_id = category.id
