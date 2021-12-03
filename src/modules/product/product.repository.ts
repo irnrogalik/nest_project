@@ -17,11 +17,7 @@ export class ProductRepository extends Repository<ProductEntity> {
         pageOptions: PageOptionsDto,
     ): Promise<ProductWithCategoryDto[]> {
         const products: ProductWithCategoryDto[] = await this.query(
-            paginate(
-                'SELECT * FROM getProductList()',
-                pageOptions.page,
-                pageOptions.take,
-            ),
+            paginate('SELECT * FROM getProductList()', pageOptions),
         );
         return plainToClass(ProductWithCategoryDto, products);
     }

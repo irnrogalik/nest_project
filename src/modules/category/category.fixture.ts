@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { plainToClass } from 'class-transformer';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';

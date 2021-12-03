@@ -4,11 +4,12 @@ import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class PageOptionsDto {
     @ApiPropertyOptional({
-        minimum: 0,
+        minimum: 1,
         default: 1,
     })
     @Type(() => Number)
     @IsInt()
+    @Min(1)
     @IsOptional()
     readonly page: number = 1;
 
@@ -22,5 +23,5 @@ export class PageOptionsDto {
     @Min(5)
     @Max(50)
     @IsOptional()
-    readonly take: number = 10;
+    readonly limit: number = 10;
 }

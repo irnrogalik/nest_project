@@ -3,6 +3,8 @@ services:
   app:
     env_file:
       - .development.env
+    environment:
+      DB_HOST: host.docker.internal
     container_name: nest_app
     restart: always
     build: .
@@ -10,12 +12,17 @@ services:
       - "3000:3000"
     links:
       - postgres
+    depends_on:
+      - postgres
   postgres:
     image: postgres
+    container_name: postgres
     restart: always
-    env_file:
-      - .development.env
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_DB=nest_boilerplate
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
-      - ./db-data:/var/lib/postgresql/data
+      - ./db_data:/var/lib/postgresql/data

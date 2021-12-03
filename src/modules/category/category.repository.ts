@@ -19,8 +19,7 @@ export class CategoryRepository extends Repository<CategoryEntity> {
             FROM category
             LEFT JOIN tax ON category.tax_id = tax.Id
             ORDER BY category.created_at`,
-                pageOptions.page,
-                pageOptions.take,
+                pageOptions,
             ),
         );
         return plainToClass(CategoryListWithTaxesDto, categoryList);

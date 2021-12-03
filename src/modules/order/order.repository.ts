@@ -15,11 +15,7 @@ import { OrderEntity } from './entity/order.entity';
 export class OrderRepository extends Repository<OrderEntity> {
     async getOrderList(pageOptions: PageOptionsDto): Promise<OrderEntity[]> {
         const list: OrderEntity[] = await this.query(
-            paginate(
-                'SELECT * FROM "order"',
-                pageOptions.page,
-                pageOptions.take,
-            ),
+            paginate('SELECT * FROM "order"', pageOptions),
         );
         return plainToClass(OrderEntity, list);
     }

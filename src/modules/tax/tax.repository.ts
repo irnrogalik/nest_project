@@ -11,7 +11,7 @@ import { TaxEntity } from './tax.entity';
 export class TaxRepository extends Repository<TaxEntity> {
     async getFullTaxes(pageOptions: PageOptionsDto): Promise<TaxEntity[]> {
         const taxes: TaxEntity[] = await this.query(
-            paginate('SELECT * FROM tax', pageOptions.page, pageOptions.take),
+            paginate('SELECT * FROM tax', pageOptions),
         );
         return plainToClass(TaxEntity, taxes);
     }
