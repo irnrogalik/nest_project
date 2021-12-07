@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
@@ -19,7 +19,7 @@ export class ProductRepository extends Repository<ProductEntity> {
         const products: ProductWithCategoryDto[] = await this.query(
             paginate('SELECT * FROM getProductList()', pageOptions),
         );
-        return plainToClass(ProductWithCategoryDto, products);
+        return plainToInstance(ProductWithCategoryDto, products);
     }
 
     async addProduct(productAddDto: ProductAddDto): Promise<ProductEntity> {
@@ -27,7 +27,7 @@ export class ProductRepository extends Repository<ProductEntity> {
             'INSERT INTO product (name, amount) VALUES ($1, $2) RETURNING *',
             [productAddDto.name, productAddDto.amount],
         );
-        return plainToClass(ProductEntity, product[0]);
+        return plainToInstance(ProductEntity, product[0]);
     }
 
     async removeProduct(productId: string): Promise<boolean> {
@@ -47,7 +47,7 @@ export class ProductRepository extends Repository<ProductEntity> {
             LEFT JOIN category ON category.id = product_category.category_id
             GROUP BY product.id;`,
         );
-        return plainToClass(ProductCategoryListDto, productCategoryList);
+        return plainToInstance(ProductCategoryListDto, productCategoryList);
     }
 
     async addProductIntoCategory(
@@ -69,6 +69,6 @@ export class ProductRepository extends Repository<ProductEntity> {
             LEFT JOIN tax ON tax.id = product_tax.tax_id
             GROUP BY product.id;`,
         );
-        return plainToClass(ProductTaxListDto, list);
+        return plainToInstance(ProductTaxListDto, list);
     }
 }

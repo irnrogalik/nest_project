@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { TaxAddDto } from './dto/TaxAddDto';
@@ -7,7 +7,7 @@ import { TaxEntity } from './tax.entity';
 
 export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
-export const listFullTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
+export const listFullTaxesEntity: TaxEntity[] = plainToInstance(TaxEntity, [
     {
         id: '20bb00de-eda9-4014-994b-f54cd91b79f2',
         createdAt: new Date('2021-10-05T19:06:15.891Z'),
@@ -28,7 +28,7 @@ export const listFullTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
 
 export const listFullTaxesDto: TaxDto[] = listFullTaxesEntity.toDtos();
 
-export const listTaxesEntity: TaxEntity[] = plainToClass(TaxEntity, [
+export const listTaxesEntity: TaxEntity[] = plainToInstance(TaxEntity, [
     {
         id: '20bb00de-eda9-4014-994b-f54cd91b79f2',
         name: 'Basic sales',
@@ -47,7 +47,7 @@ export const taxToAdd: TaxAddDto = {
     description: 'description about new tax',
 };
 
-export const taxAddingResult: TaxEntity = plainToClass(TaxEntity, {
+export const taxAddingResult: TaxEntity = plainToInstance(TaxEntity, {
     id: '71e1e2bc-9a8d-4b3e-aa32-0ad8c79acc23',
     createdAt: new Date('2021-10-11T06:44:59.145Z'),
     updatedAt: new Date('2021-10-11T06:44:59.145Z'),

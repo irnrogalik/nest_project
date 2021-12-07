@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { CategoryEntity } from './category.entity';
@@ -47,7 +47,7 @@ export const getCategoryListWithTaxes: CategoryListWithTaxesDto[] = [
     },
 ];
 
-export const getCategoryListEntity: CategoryEntity[] = plainToClass(
+export const getCategoryListEntity: CategoryEntity[] = plainToInstance(
     CategoryEntity,
     [
         {
@@ -109,7 +109,7 @@ export const categoryToAdd: CategoryAddDto = {
     taxId: '20bb00de-eda9-4014-994b-f54cd91b79f2',
 };
 
-export const categoryAddingResult: CategoryEntity = plainToClass(
+export const categoryAddingResult: CategoryEntity = plainToInstance(
     CategoryEntity,
     {
         id: '0eb832bc-33e1-439f-a670-ebccbf05bd37',

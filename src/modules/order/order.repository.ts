@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
@@ -17,7 +17,7 @@ export class OrderRepository extends Repository<OrderEntity> {
         const list: OrderEntity[] = await this.query(
             paginate('SELECT * FROM "order"', pageOptions),
         );
-        return plainToClass(OrderEntity, list);
+        return plainToInstance(OrderEntity, list);
     }
 
     async getProductsInCart(cartDto: CartDto[]): Promise<ProductInCartDto[]> {
@@ -26,7 +26,7 @@ export class OrderRepository extends Repository<OrderEntity> {
                 ${cartDto.map((product) => product.id)}
             }')`,
         );
-        return plainToClass(ProductInCartDto, productsInCart);
+        return plainToInstance(ProductInCartDto, productsInCart);
     }
 
     async addOrder(order: Partial<OrderDto>): Promise<OrderEntity> {
@@ -34,7 +34,7 @@ export class OrderRepository extends Repository<OrderEntity> {
             'INSERT INTO "order" (order_tax, total) VALUES ($1, $2) RETURNING *',
             [toInteger(order.orderTax), toInteger(order.total)],
         );
-        return plainToClass(OrderEntity, newOrder[0]);
+        return plainToInstance(OrderEntity, newOrder[0]);
     }
 
     async addOrderList(orderList: Partial<OrderListDto>): Promise<boolean> {

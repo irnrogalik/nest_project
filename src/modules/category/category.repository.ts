@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
@@ -22,14 +22,14 @@ export class CategoryRepository extends Repository<CategoryEntity> {
                 pageOptions,
             ),
         );
-        return plainToClass(CategoryListWithTaxesDto, categoryList);
+        return plainToInstance(CategoryListWithTaxesDto, categoryList);
     }
 
     async getCategoryList(): Promise<CategoryEntity[]> {
         const categories: CategoryEntity[] = await this.query(
             'SELECT * FROM category',
         );
-        return plainToClass(CategoryEntity, categories);
+        return plainToInstance(CategoryEntity, categories);
     }
 
     async addCategory(categoryAddDto: CategoryAddDto): Promise<CategoryEntity> {
@@ -37,7 +37,7 @@ export class CategoryRepository extends Repository<CategoryEntity> {
             'INSERT INTO category (name, tax_id) VALUES ($1, $2) RETURNING *',
             [categoryAddDto.name, categoryAddDto.taxId],
         );
-        return plainToClass(CategoryEntity, category[0]);
+        return plainToInstance(CategoryEntity, category[0]);
     }
 
     async removeCategory(categoryId: string): Promise<boolean> {
