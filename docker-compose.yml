@@ -1,26 +1,28 @@
-version: "3"
+version: "3.8"
 services:
   app:
     env_file:
       - .development.env
-    container_name: awesome_nest_boilerplate
+    environment:
+      DB_HOST: host.docker.internal
+    container_name: nest_app
     restart: always
     build: .
     ports:
-      - "$PORT:$PORT"
+      - "3000:3000"
     links:
+      - postgres
+    depends_on:
       - postgres
   postgres:
     image: postgres
+    container_name: postgres
     restart: always
     environment:
-      DB_PASSWORD: postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_DB=nest_boilerplate
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
-      - ./db-data:/var/lib/postgresql/data
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+      - ./db_data:/var/lib/postgresql/data

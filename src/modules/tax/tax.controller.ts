@@ -5,6 +5,7 @@ import {
     HttpCode,
     HttpStatus,
     Post,
+    Query,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
@@ -15,6 +16,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { TaxAddDto } from './dto/TaxAddDto';
 import { TaxDto } from './dto/TaxDto';
@@ -34,8 +36,13 @@ export class TaxController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting full tax list',
     })
-    getFullTaxes(): Promise<TaxDto[]> {
-        return this.taxService.getFullTaxes();
+    async getFullTaxes(
+        @Query() pageOptions: PageOptionsDto,
+    ): Promise<TaxDto[]> {
+        const fullTaxList: TaxDto[] = await this.taxService.getFullTaxes(
+            pageOptions,
+        );
+        return fullTaxList;
     }
 
     @Get('get')
@@ -47,8 +54,9 @@ export class TaxController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting tax list',
     })
-    getTaxes(): Promise<TaxDto[]> {
-        return this.taxService.getTaxes();
+    async getTaxes(): Promise<TaxDto[]> {
+        const taxList: TaxDto[] = await this.taxService.getTaxes();
+        return taxList;
     }
 
     @Post('add')
@@ -60,8 +68,9 @@ export class TaxController {
     @ApiBadRequestResponse({
         description: 'Error occurred during adding tax',
     })
-    addTax(@Body() taxAddDto: TaxAddDto): Promise<TaxDto> {
-        return this.taxService.addTax(taxAddDto);
+    async addTax(@Body() taxAddDto: TaxAddDto): Promise<TaxDto> {
+        const addResult: TaxDto = await this.taxService.addTax(taxAddDto);
+        return addResult;
     }
 
     @Post('remove/:id')

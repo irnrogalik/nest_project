@@ -5,6 +5,7 @@ import {
     HttpCode,
     HttpStatus,
     Post,
+    Query,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
@@ -16,6 +17,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { ProductAddDto } from './dto/ProductAddDto';
 import { ProductCategoryListDto } from './dto/ProductCategoryListDto';
@@ -37,8 +39,12 @@ export class ProductController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting product list',
     })
-    async getProductList(): Promise<ProductWithCategoryDto[]> {
-        const products: ProductWithCategoryDto[] = await this.productService.getProductList();
+    async getProductList(
+        @Query() pageOptions: PageOptionsDto,
+    ): Promise<ProductWithCategoryDto[]> {
+        const products: ProductWithCategoryDto[] = await this.productService.getProductList(
+            pageOptions,
+        );
         return products;
     }
 

@@ -1,10 +1,13 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { ProductInCartDto } from '../product/dto/ProductInCartDto';
 import type { CartDto } from './dto/CartDto';
 import type { CartFullDto } from './dto/CartFullDto';
 import type { OrderDto } from './dto/OrderDto';
 import { OrderEntity } from './entity/order.entity';
+
+export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
 export const cartDto: CartDto[] = [
     { id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', quantity: 1 },
@@ -12,7 +15,7 @@ export const cartDto: CartDto[] = [
     { id: '109a6e18-4a19-45a3-91d1-7ff2b092fb49', quantity: 1 },
 ];
 
-export const getProductsInCart: ProductInCartDto[] = plainToClass(
+export const getProductsInCart: ProductInCartDto[] = plainToInstance(
     ProductInCartDto,
     [
         {
@@ -62,7 +65,7 @@ export const cartList: CartFullDto = {
 
 export const orderToRemove = '5f023b97-34c9-476d-ada1-2f58b82f1505';
 
-export const orderListEntity: OrderEntity[] = plainToClass(OrderEntity, [
+export const orderListEntity: OrderEntity[] = plainToInstance(OrderEntity, [
     {
         id: '5f023b97-34c9-476d-ada1-2f58b82f1505',
         createdAt: new Date('2021-10-18T19:49:15.430Z'),

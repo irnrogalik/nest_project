@@ -5,6 +5,7 @@ import {
     HttpCode,
     HttpStatus,
     Post,
+    Query,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
@@ -16,6 +17,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import type { CartDto } from './dto/CartDto';
 import { CartFullDto } from './dto/CartFullDto';
@@ -37,8 +39,13 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting order list',
     })
-    getOrderList(): Promise<OrderDto[]> {
-        return this.orderService.getOrderList();
+    async getOrderList(
+        @Query() pageOptions: PageOptionsDto,
+    ): Promise<OrderDto[]> {
+        const orderList: OrderDto[] = await this.orderService.getOrderList(
+            pageOptions,
+        );
+        return orderList;
     }
 
     @Post('/cart')
@@ -51,8 +58,9 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting cart',
     })
-    getCart(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
-        return this.orderService.getCart(cartDto);
+    async getCart(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
+        const cart: CartFullDto = await this.orderService.getCart(cartDto);
+        return cart;
     }
 
     @Post('add')
@@ -64,8 +72,11 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during adding order',
     })
-    addOrder(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
-        return this.orderService.addOrder(cartDto);
+    async addOrder(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
+        const addResult: CartFullDto = await this.orderService.addOrder(
+            cartDto,
+        );
+        return addResult;
     }
 
     @Post('remove/:id')
@@ -79,7 +90,8 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during removing order',
     })
-    removeOrder(@UUIDParam('id') orderId: string): Promise<boolean> {
-        return this.orderService.removeOrder(orderId);
+    async removeOrder(@UUIDParam('id') orderId: string): Promise<boolean> {
+        const result: boolean = await this.orderService.removeOrder(orderId);
+        return result;
     }
 }

@@ -1,5 +1,6 @@
-FROM node:dubnium AS dist
-COPY package.json yarn.lock ./
+FROM node:16 AS dist
+
+COPY package.json ./
 
 RUN yarn install
 
@@ -7,23 +8,23 @@ COPY . ./
 
 RUN yarn build:prod
 
-FROM node:dubnium AS node_modules
-COPY package.json yarn.lock ./
+FROM node:16 AS node_modules
+COPY package.json ./
 
 RUN yarn install --prod
 
-FROM node:dubnium
+FROM node:16
 
 ARG PORT=3000
 
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /app
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY --from=dist dist /usr/src/app/dist
-COPY --from=node_modules node_modules /usr/src/app/node_modules
+COPY --from=dist dist /app/dist
+COPY --from=node_modules node_modules /app/node_modules
 
-COPY . /usr/src/app
+COPY . /app
 
 EXPOSE $PORT
 

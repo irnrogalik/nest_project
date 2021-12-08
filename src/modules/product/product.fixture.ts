@@ -1,10 +1,13 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { ProductAddDto } from './dto/ProductAddDto';
 import type { ProductCategoryListDto } from './dto/ProductCategoryListDto';
 import type { ProductDto } from './dto/ProductDto';
 import type { ProductWithCategoryDto } from './dto/ProductWithCategoryDto';
 import { ProductEntity } from './entity/product.entity';
+
+export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
 export const productWithCategory: ProductWithCategoryDto[] = [
     {
@@ -69,13 +72,16 @@ export const productToAdd: ProductAddDto = {
     categories: ['4b89f36a-317f-49a2-8f69-7db670637206'],
 };
 
-export const productAddingResult: ProductEntity = plainToClass(ProductEntity, {
-    id: '8d7a3ea5-97e6-4a5d-a637-40331e3faabb',
-    createdAt: new Date('2021-10-11T05:46:30.627Z'),
-    updatedAt: new Date('2021-10-11T05:46:30.627Z'),
-    name: 'new candy',
-    amount: 2350,
-});
+export const productAddingResult: ProductEntity = plainToInstance(
+    ProductEntity,
+    {
+        id: '8d7a3ea5-97e6-4a5d-a637-40331e3faabb',
+        createdAt: new Date('2021-10-11T05:46:30.627Z'),
+        updatedAt: new Date('2021-10-11T05:46:30.627Z'),
+        name: 'new candy',
+        amount: 2350,
+    },
+);
 
 export const productAddingResultDto: ProductDto = productAddingResult.toDto();
 

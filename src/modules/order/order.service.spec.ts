@@ -10,13 +10,13 @@ import {
     orderListDto,
     orderListEntity,
     orderToRemove,
+    pageOptions,
 } from './order.fixture';
 import { OrderRepository } from './order.repository';
 import { OrderService } from './order.service';
 
 describe('Order Service', () => {
     let orderService: OrderService;
-    let orderRepository: OrderRepository;
 
     beforeAll(async () => {
         const OrderRepositoryProvider = {
@@ -34,7 +34,6 @@ describe('Order Service', () => {
         }).compile();
 
         orderService = app.get<OrderService>(OrderService);
-        orderRepository = app.get<OrderRepository>(OrderRepository);
     });
 
     describe('get cart set', () => {
@@ -60,7 +59,9 @@ describe('Order Service', () => {
 
     describe('get order list', () => {
         it('should return list of orders', async () => {
-            expect(await orderService.getOrderList()).toEqual(orderListDto);
+            expect(await orderService.getOrderList(pageOptions)).toEqual(
+                orderListDto,
+            );
         });
     });
 });

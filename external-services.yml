@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  postgresEx:
+    image: postgres
+    container_name: postgresEx
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_DB=nest_boilerplate
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./db_data:/var/lib/postgresql/data

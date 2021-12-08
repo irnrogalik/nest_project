@@ -7,6 +7,7 @@ import { compact, map } from 'lodash';
 
 import type { AbstractEntity } from './common/abstract.entity';
 import type { AbstractDto } from './common/dto/AbstractDto';
+
 declare global {
     export type GetConstructorArgs<T> = T extends new (...args: infer U) => any
         ? U

@@ -5,6 +5,7 @@ import {
     HttpCode,
     HttpStatus,
     Post,
+    Query,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
@@ -15,6 +16,7 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { UUIDParam } from '../../decorators/uuid.decorators';
 import { CategoryService } from './category.service';
 import { CategoryAddDto } from './dto/CategoryAddDto';
@@ -35,8 +37,13 @@ export class CategoryController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting category list with taxes',
     })
-    getCategoryListWithTaxes(): Promise<CategoryListWithTaxesDto[]> {
-        return this.categoryService.getCategoryListWithTaxes();
+    async getCategoryListWithTaxes(
+        @Query() pageOptions: PageOptionsDto,
+    ): Promise<CategoryListWithTaxesDto[]> {
+        const categoryListWithTaxes: CategoryListWithTaxesDto[] = await this.categoryService.getCategoryListWithTaxes(
+            pageOptions,
+        );
+        return categoryListWithTaxes;
     }
 
     @Get('get')
@@ -48,8 +55,9 @@ export class CategoryController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting category list',
     })
-    getCategoryList(): Promise<CategoryDto[]> {
-        return this.categoryService.getCategoryList();
+    async getCategoryList(): Promise<CategoryDto[]> {
+        const categoryList: CategoryDto[] = await this.categoryService.getCategoryList();
+        return categoryList;
     }
 
     @Post('add')

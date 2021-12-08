@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
-import { toInteger } from '../../shared/functions';
+import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { paginate, toInteger } from '../../shared/functions';
 import { ProductInCartDto } from '../product/dto/ProductInCartDto';
 import type { CartDto } from './dto/CartDto';
 import type { OrderDto } from './dto/OrderDto';
@@ -12,9 +13,11 @@ import { OrderEntity } from './entity/order.entity';
 
 @EntityRepository(OrderEntity)
 export class OrderRepository extends Repository<OrderEntity> {
-    async getOrderList(): Promise<OrderEntity[]> {
-        const list: OrderEntity[] = await this.query('SELECT * FROM "order"');
-        return plainToClass(OrderEntity, list);
+    async getOrderList(pageOptions: PageOptionsDto): Promise<OrderEntity[]> {
+        const list: OrderEntity[] = await this.query(
+            paginate('SELECT * FROM "order"', pageOptions),
+        );
+        return plainToInstance(OrderEntity, list);
     }
 
     async getProductsInCart(cartDto: CartDto[]): Promise<ProductInCartDto[]> {
@@ -23,7 +26,7 @@ export class OrderRepository extends Repository<OrderEntity> {
                 ${cartDto.map((product) => product.id)}
             }')`,
         );
-        return plainToClass(ProductInCartDto, productsInCart);
+        return plainToInstance(ProductInCartDto, productsInCart);
     }
 
     async addOrder(order: Partial<OrderDto>): Promise<OrderEntity> {
@@ -31,7 +34,7 @@ export class OrderRepository extends Repository<OrderEntity> {
             'INSERT INTO "order" (order_tax, total) VALUES ($1, $2) RETURNING *',
             [toInteger(order.orderTax), toInteger(order.total)],
         );
-        return plainToClass(OrderEntity, newOrder[0]);
+        return plainToInstance(OrderEntity, newOrder[0]);
     }
 
     async addOrderList(orderList: Partial<OrderListDto>): Promise<boolean> {
