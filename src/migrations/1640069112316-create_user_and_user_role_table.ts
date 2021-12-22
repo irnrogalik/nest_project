@@ -18,17 +18,32 @@ export class createUserTable1640069112316 implements MigrationInterface {
             );
         `);
         await queryRunner.query(`
+            CREATE TABLE IF NOT EXISTS role
+            (
+                "id"            uuid              NOT NULL DEFAULT uuid_generate_v4(),
+                "created_at"    TIMESTAMP         NOT NULL DEFAULT now(),
+                "updated_at"    TIMESTAMP         NOT NULL DEFAULT now(),
+                "name"          character varying NOT NULL,
+                PRIMARY KEY(id),
+                CONSTRAINT role_name_unique UNIQUE (name)
+            );
+        `);
+        await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS user_role
             (
                 "id"            uuid              NOT NULL DEFAULT uuid_generate_v4(),
                 "created_at"    TIMESTAMP         NOT NULL DEFAULT now(),
                 "updated_at"    TIMESTAMP         NOT NULL DEFAULT now(),
-                "role"          character varying NOT NULL,
                 "user_id"       uuid,
+                "role_id"       uuid,
                 PRIMARY KEY(id),
                 CONSTRAINT fk_userId_for_user_role
                     FOREIGN KEY(user_id)
                         REFERENCES "user"(id)
+                        ON DELETE SET NULL,
+                CONSTRAINT fk_roleId_for_user_role
+                    FOREIGN KEY(role_id)
+                        REFERENCES role(id)
                         ON DELETE SET NULL
             );
         `);
@@ -40,19 +55,16 @@ export class createUserTable1640069112316 implements MigrationInterface {
                     ON DELETE SET NULL;
         `);
         await queryRunner.query(`
-        INSERT INTO "user" (id, name, email, password, phone, address)
+        INSERT INTO role (id, name)
         VALUES
-            ('41e4b9c3-1fd8-4fc6-a674-1065595dd332', 'admin', 'admin@admin.com', 'password', '375330000000', 'Minsk');
-        `);
-        await queryRunner.query(`
-        INSERT INTO "user_role" (id, role, user_id)
-        VALUES
-            ('c93f22bd-ccbb-4971-a207-617a458da12b', 'admin', '41e4b9c3-1fd8-4fc6-a674-1065595dd332');
+            ('8ca56fe7-5b1b-4348-a43f-c3f916915b02', 'admin'),
+            ('9d41f29e-3022-4e44-b95d-ff083f388013', 'user');
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query('DROP TABLE "user";');
+        await queryRunner.query('DROP TABLE role;');
         await queryRunner.query('DROP TABLE user_role;');
     }
 }
