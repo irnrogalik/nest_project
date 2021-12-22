@@ -34,7 +34,7 @@ export class createUserTable1640069112316 implements MigrationInterface {
         `);
         await queryRunner.query(`
             ALTER TABLE "order"
-                ADD COLUMN user_id uuid,
+                ADD COLUMN user_id uuid DEFAULT NULL,
                 ADD FOREIGN KEY (user_id)
                     REFERENCES "user"(id)
                     ON DELETE SET NULL;

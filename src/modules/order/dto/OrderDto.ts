@@ -14,7 +14,7 @@ export class OrderDto extends AbstractDto {
     total: number;
 
     @ApiProperty()
-    userId: string;
+    userId: string | null;
 
     constructor(order: OrderEntity) {
         super(order);

@@ -15,7 +15,7 @@ export class OrderEntity extends AbstractEntity<OrderDto> {
         type: 'uuid',
         name: 'user_id',
     })
-    userId: string;
+    userId: string | null;
 
     dtoClass = OrderDto;
 }
