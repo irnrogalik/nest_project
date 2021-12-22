@@ -9,6 +9,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { TaxModule } from './modules/tax/tax.module';
+import { UserModule } from './modules/user/user.module';
 import { ConfigService } from './shared/services/config.service';
 import { SharedModule } from './shared/shared.module';
 
@@ -18,6 +19,7 @@ import { SharedModule } from './shared/shared.module';
         TaxModule,
         CategoryModule,
         OrderModule,
+        UserModule,
         TypeOrmModule.forRootAsync({
             imports: [SharedModule],
             useFactory: (configService: ConfigService) =>
