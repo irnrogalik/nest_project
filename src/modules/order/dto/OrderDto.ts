@@ -13,9 +13,13 @@ export class OrderDto extends AbstractDto {
     @ToDecimal()
     total: number;
 
+    @ApiProperty()
+    userId: string | null;
+
     constructor(order: OrderEntity) {
         super(order);
         this.orderTax = order.orderTax;
         this.total = order.total;
+        this.userId = order.userId;
     }
 }

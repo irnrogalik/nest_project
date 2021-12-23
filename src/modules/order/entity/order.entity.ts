@@ -11,5 +11,11 @@ export class OrderEntity extends AbstractEntity<OrderDto> {
     @Column()
     total: number;
 
+    @Column({
+        type: 'uuid',
+        name: 'user_id',
+    })
+    userId: string | null;
+
     dtoClass = OrderDto;
 }
