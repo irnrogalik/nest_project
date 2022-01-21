@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { contextMiddleware } from './middlewares';
+import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
@@ -20,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
         CategoryModule,
         OrderModule,
         UserModule,
+        AuthModule,
         TypeOrmModule.forRootAsync({
             imports: [SharedModule],
             useFactory: (configService: ConfigService) =>
