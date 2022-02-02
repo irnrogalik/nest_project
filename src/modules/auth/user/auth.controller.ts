@@ -14,7 +14,9 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 
-import { UserDto } from '../user/dto/UserDto';
+import { UserLoginDto } from '../../../common/dto/UserLoginDto';
+import { AccessToken } from '../../../common/model';
+import { UserDto } from '../../user/dto/UserDto';
 import { AuthService } from './auth.service';
 import { UserRegistrationDto } from './dto/UserRegistrationDto';
 import { LocalAuthGuard } from './guard/local-auth.guard';
@@ -28,13 +30,10 @@ export class AuthController {
     @Post('login')
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({})
-    @ApiConflictResponse({
-        description: 'User do not exist; Wrong password',
-    })
     @ApiBadRequestResponse({
-        description: 'Error occurred during login user',
+        description: 'Incorrect username or password',
     })
-    login(@Request() req): any {
+    login(@Body() user: UserLoginDto, @Request() req): AccessToken {
         return this.authService.login(req.user);
     }
 
@@ -45,7 +44,7 @@ export class AuthController {
         description: 'User was successfully registered',
     })
     @ApiConflictResponse({
-        description: 'User already exist',
+        description: 'User already exists',
     })
     @ApiBadRequestResponse({
         description: 'Error occurred during registering user',
@@ -53,7 +52,7 @@ export class AuthController {
     async registration(
         @Body() userRegistrationDto: UserRegistrationDto,
     ): Promise<UserDto> {
-        const newUser: UserDto = await this.authService.addNewUser(
+        const newUser: UserDto = await this.authService.registerUser(
             userRegistrationDto,
         );
         return newUser;

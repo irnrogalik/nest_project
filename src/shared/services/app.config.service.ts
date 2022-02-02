@@ -1,40 +1,12 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import dotenv from 'dotenv';
 
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
-export class ConfigService {
-    constructor() {
-        const nodeEnv = this.nodeEnv;
-        dotenv.config({
-            path: `.${nodeEnv}.env`,
-        });
-
-        // Replace \\n with \n to support multiline strings in AWS
-        for (const envName of Object.keys(process.env)) {
-            process.env[envName] = process.env[envName].replace(/\\n/g, '\n');
-        }
-    }
-
-    get isDevelopment(): boolean {
-        return this.nodeEnv === 'development';
-    }
-
-    get isProduction(): boolean {
-        return this.nodeEnv === 'production';
-    }
-
-    public get(key: string): string {
-        return process.env[key];
-    }
-
-    public getNumber(key: string): number {
-        return Number(this.get(key));
-    }
-
-    get nodeEnv(): string {
-        return this.get('NODE_ENV') || 'development';
-    }
+@Injectable()
+export class AppConfigService {
+    constructor(private configService: ConfigService) {}
 
     get typeOrmConfig(): TypeOrmModuleOptions {
         let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
@@ -67,13 +39,14 @@ export class ConfigService {
             migrations,
             keepConnectionAlive: true,
             type: 'postgres',
-            host: this.get('DB_HOST'),
-            port: this.getNumber('DB_PORT'),
-            username: this.get('DB_USERNAME'),
-            password: this.get('DB_PASSWORD'),
-            database: this.get('DB_DATABASE'),
+            host: this.configService.get<string>('DB_HOST'),
+            port: this.configService.get<number>('DB_PORT'),
+            username: this.configService.get<string>('DB_USERNAME'),
+            password: this.configService.get<string>('DB_PASSWORD'),
+            database: this.configService.get<string>('DB_DATABASE'),
             migrationsRun: true,
-            logging: this.nodeEnv === 'development',
+            logging:
+                this.configService.get<string>('NODE_ENV') === 'development',
             namingStrategy: new SnakeNamingStrategy(),
         };
     }

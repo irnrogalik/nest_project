@@ -2,6 +2,7 @@ import './boilerplate.polyfill';
 
 import type { MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { contextMiddleware } from './middlewares';
@@ -11,7 +12,7 @@ import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { TaxModule } from './modules/tax/tax.module';
 import { UserModule } from './modules/user/user.module';
-import { ConfigService } from './shared/services/config.service';
+import { AppConfigService } from './shared/services/app.config.service';
 import { SharedModule } from './shared/shared.module';
 
 @Module({
@@ -22,11 +23,14 @@ import { SharedModule } from './shared/shared.module';
         OrderModule,
         UserModule,
         AuthModule,
+        ConfigModule.forRoot({
+            envFilePath: '.development.env',
+        }),
         TypeOrmModule.forRootAsync({
             imports: [SharedModule],
-            useFactory: (configService: ConfigService) =>
-                configService.typeOrmConfig,
-            inject: [ConfigService],
+            useFactory: (apiConfigService: AppConfigService) =>
+                apiConfigService.typeOrmConfig,
+            inject: [AppConfigService],
         }),
     ],
 })

@@ -3,9 +3,11 @@ import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
 import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import type { Role } from '../../common/model';
 import { getHash, paginate } from '../../shared/functions';
-import { UserLoginDto } from '../auth/dto/UserLoginDto';
-import type { UserRegistrationDto } from '../auth/dto/UserRegistrationDto';
+import type { AdminRegistrationDto } from '../auth/admin/dto/AdminRegistrationDto';
+import type { UserRegistrationDto } from '../auth/user/dto/UserRegistrationDto';
+import { UserWithRoleDto } from './dto/UserWithRoleDto';
 import { UserEntity } from './entity/user.entity';
 
 @EntityRepository(UserEntity)
@@ -26,6 +28,15 @@ export class UserRepository extends Repository<UserEntity> {
         return plainToInstance(UserEntity, user[0]);
     }
 
+    async addAdmin(newUser: AdminRegistrationDto): Promise<UserEntity> {
+        const hash: string = await getHash(newUser.password);
+        const user: UserEntity = await this.query(
+            'INSERT INTO "user" (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING *',
+            [newUser.name, newUser.email, hash, newUser.phone],
+        );
+        return plainToInstance(UserEntity, user[0]);
+    }
+
     async removeUser(userId: string): Promise<boolean> {
         const result: [
             [],
@@ -34,19 +45,33 @@ export class UserRepository extends Repository<UserEntity> {
         return result[1];
     }
 
-    async getUserByEmail(email: string): Promise<UserEntity> {
+    async getUserByEmail(email: string): Promise<UserWithRoleDto | null> {
         const user: UserEntity = await this.query(
-            'SELECT * FROM "user" WHERE email = $1',
+            `SELECT u.id, u.email, u.password, r.name as role
+            FROM "user" u
+            LEFT JOIN user_role ur on ur.user_id = u.id
+            LEFT JOIN role r on r.id = ur.role_id
+            WHERE email = $1`,
             [email],
         );
-        return plainToInstance(UserEntity, user[0]);
+        return user ? plainToInstance(UserWithRoleDto, user[0]) : null;
     }
 
-    async gerUserForLogin(email: string): Promise<UserLoginDto> {
-        const user: UserLoginDto = await this.query(
-            'SELECT email, password FROM "user" WHERE email = $1',
-            [email],
+    async getRoleId(role: Role): Promise<string | null> {
+        const roleId: [
+            { id: string },
+        ] = await this.query('SELECT id FROM role WHERE name = $1', [role]);
+        return roleId ? roleId[0].id : null;
+    }
+
+    async addUserToRole(userId: string, roleId: string): Promise<boolean> {
+        const result: [
+            [],
+            boolean,
+        ] = await this.query(
+            'INSERT INTO user_role (user_id, role_id) VALUES ($1, $2) RETURNING *',
+            [userId, roleId],
         );
-        return plainToInstance(UserLoginDto, user[0]);
+        return result[1];
     }
 }

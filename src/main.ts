@@ -4,6 +4,7 @@ import {
     UnprocessableEntityException,
     ValidationPipe,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -20,8 +21,6 @@ import {
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/bad-request.filter';
 import { setupSwagger } from './setup-swagger';
-import { ConfigService } from './shared/services/config.service';
-import { SharedModule } from './shared/shared.module';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
     initializeTransactionalContext();
@@ -59,24 +58,28 @@ export async function bootstrap(): Promise<NestExpressApplication> {
         }),
     );
 
-    const configService = app.select(SharedModule).get(ConfigService);
+    const configService = app.get(ConfigService);
 
     app.connectMicroservice({
         transport: Transport.TCP,
         options: {
-            port: configService.getNumber('TRANSPORT_PORT'),
+            port: configService.get<number>('TRANSPORT_PORT'),
             retryAttempts: 5,
             retryDelay: 3000,
         },
     });
 
-    await app.startAllMicroservicesAsync();
+    await app.startAllMicroservices();
 
-    if (['development', 'staging'].includes(configService.nodeEnv)) {
+    if (
+        ['development', 'staging'].includes(
+            configService.get<string>('NODE_ENV') || 'development',
+        )
+    ) {
         setupSwagger(app);
     }
 
-    const port = configService.getNumber('PORT');
+    const port = configService.get<number>('PORT');
     await app.listen(port);
 
     console.info(`server running on port ${port}`);

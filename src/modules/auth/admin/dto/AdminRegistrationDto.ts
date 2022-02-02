@@ -4,12 +4,13 @@ import {
     IsNotEmpty,
     IsPhoneNumber,
     IsString,
+    Matches,
     MinLength,
 } from 'class-validator';
 
-import { Trim } from '../../../decorators/transforms.decorator';
+import { Trim } from '../../../../decorators/transforms.decorator';
 
-export class UserRegistrationDto {
+export class AdminRegistrationDto {
     @ApiProperty()
     @IsString()
     @Trim()
@@ -23,16 +24,12 @@ export class UserRegistrationDto {
 
     @ApiProperty({ minLength: 6 })
     @IsString()
-    @MinLength(6)
+    @MinLength(12)
+    @Matches('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-])')
     readonly password: string;
 
     @ApiProperty()
     @IsPhoneNumber()
     @IsNotEmpty()
     phone: string;
-
-    @ApiProperty()
-    @IsNotEmpty()
-    @Trim()
-    address: string;
 }
