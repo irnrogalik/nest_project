@@ -33,7 +33,8 @@ export class AuthService {
             user.password,
             existingUser.password,
         );
-        if (!isTruePassword) {
+        const isUser: boolean = existingUser.role === Role.USER;
+        if (!isTruePassword || !isUser) {
             throw new BadRequestException('Incorrect username or password');
         }
         return existingUser;
@@ -56,9 +57,7 @@ export class AuthService {
             throw new ConflictException('User with this email already exists');
         }
         const newUser: UserDto = await this.userService.addUser(user);
-        if (newUser) {
-            await this.userService.addUserToRole(newUser.id, Role.USER);
-        }
+        await this.userService.addUserToRole(newUser.id, Role.USER);
         this.login(plainToInstance(UserWithRoleDto, newUser));
         return newUser;
     }

@@ -5,10 +5,10 @@ import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from '../../snake-naming.strategy';
 
 @Injectable()
-export class AppConfigService {
+export class TypeOrmConfigService {
     constructor(private configService: ConfigService) {}
 
-    get typeOrmConfig(): TypeOrmModuleOptions {
+    get(): TypeOrmModuleOptions {
         let entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
         let migrations = [__dirname + '/../../migrations/*{.ts,.js}'];
 

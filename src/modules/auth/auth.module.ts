@@ -3,14 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { AdminLocalStrategy } from '../auth/admin/strategy/local.strategy';
 import { LocalStrategy } from '../auth/user/strategy/local.strategy';
 import { UserModule } from '../user/user.module';
-import { AdminAuthController } from './admin/auth.controller';
-import { AdminAuthService } from './admin/auth.service';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { AdminAuthController } from './admin/admin.auth.controller';
+import { AdminAuthService } from './admin/admin.auth.service';
+import { AdminJwtStrategy } from './admin/strategy/admin.jwt.strategy';
+import { AdminLocalStrategy } from './admin/strategy/admin.local.strategy';
 import { AuthController } from './user/auth.controller';
 import { AuthService } from './user/auth.service';
+import { JwtStrategy } from './user/strategy/jwt.strategy';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { AuthService } from './user/auth.service';
         LocalStrategy,
         AdminLocalStrategy,
         JwtStrategy,
+        AdminJwtStrategy,
     ],
     exports: [AuthService, AdminAuthService],
 })

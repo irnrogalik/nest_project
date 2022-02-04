@@ -3,10 +3,12 @@ import {
     ConflictException,
     Injectable,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { plainToInstance } from 'class-transformer';
 
 import type { UserLoginDto } from '../../../common/dto/UserLoginDto';
+import type { AccessToken } from '../../../common/model';
 import { Role } from '../../../common/model';
 import { comparePasswordWithHash } from '../../../shared/functions';
 import type { UserDto } from '../../user/dto/UserDto';
@@ -19,6 +21,7 @@ export class AdminAuthService {
     constructor(
         private userService: UserService,
         private jwtService: JwtService,
+        private configService: ConfigService,
     ) {}
 
     async validateUser(user: UserLoginDto): Promise<UserWithRoleDto> {
@@ -40,7 +43,7 @@ export class AdminAuthService {
     }
 
     // eslint-disable-next-line camelcase
-    login(user: UserWithRoleDto): { access_token: string } {
+    login(user: UserWithRoleDto): AccessToken {
         const payload = { id: user.id, email: user.email, role: user.role };
         return {
             // eslint-disable-next-line camelcase
@@ -49,16 +52,20 @@ export class AdminAuthService {
     }
 
     async registerAdmin(admin: AdminRegistrationDto): Promise<UserDto> {
+        const isTrueSecretKey: boolean =
+            admin.secretKey ===
+            this.configService.get<string>('ADMIN_REGISTRATION_SECRET_KEY');
+        if (!isTrueSecretKey) {
+            throw new BadRequestException('Verification failed');
+        }
         const getAdmin: UserWithRoleDto = await this.userService.getUserByEmail(
             admin.email,
         );
         if (getAdmin) {
             throw new ConflictException('User with this email already exists');
         }
-        const newAdmin: UserDto = await this.userService.addAdmin(admin);
-        if (newAdmin) {
-            await this.userService.addUserToRole(newAdmin.id, Role.ADMIN);
-        }
+        const newAdmin: UserDto = await this.userService.addUser(admin);
+        await this.userService.addUserToRole(newAdmin.id, Role.ADMIN);
         this.login(plainToInstance(UserWithRoleDto, newAdmin));
         return newAdmin;
     }

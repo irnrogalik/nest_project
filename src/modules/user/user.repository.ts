@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
 import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
-import type { Role } from '../../common/model';
 import { getHash, paginate } from '../../shared/functions';
 import type { AdminRegistrationDto } from '../auth/admin/dto/AdminRegistrationDto';
 import type { UserRegistrationDto } from '../auth/user/dto/UserRegistrationDto';
@@ -19,20 +18,14 @@ export class UserRepository extends Repository<UserEntity> {
         return plainToInstance(UserEntity, users);
     }
 
-    async addUser(newUser: UserRegistrationDto): Promise<UserEntity> {
+    async addUser(
+        newUser: UserRegistrationDto | AdminRegistrationDto,
+    ): Promise<UserEntity> {
         const hash: string = await getHash(newUser.password);
+        const address: string = 'address' in newUser ? newUser.address : null;
         const user: UserEntity = await this.query(
             'INSERT INTO "user" (name, email, password, phone, address) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [newUser.name, newUser.email, hash, newUser.phone, newUser.address],
-        );
-        return plainToInstance(UserEntity, user[0]);
-    }
-
-    async addAdmin(newUser: AdminRegistrationDto): Promise<UserEntity> {
-        const hash: string = await getHash(newUser.password);
-        const user: UserEntity = await this.query(
-            'INSERT INTO "user" (name, email, password, phone) VALUES ($1, $2, $3, $4) RETURNING *',
-            [newUser.name, newUser.email, hash, newUser.phone],
+            [newUser.name, newUser.email, hash, newUser.phone, address],
         );
         return plainToInstance(UserEntity, user[0]);
     }
@@ -55,23 +48,5 @@ export class UserRepository extends Repository<UserEntity> {
             [email],
         );
         return user ? plainToInstance(UserWithRoleDto, user[0]) : null;
-    }
-
-    async getRoleId(role: Role): Promise<string | null> {
-        const roleId: [
-            { id: string },
-        ] = await this.query('SELECT id FROM role WHERE name = $1', [role]);
-        return roleId ? roleId[0].id : null;
-    }
-
-    async addUserToRole(userId: string, roleId: string): Promise<boolean> {
-        const result: [
-            [],
-            boolean,
-        ] = await this.query(
-            'INSERT INTO user_role (user_id, role_id) VALUES ($1, $2) RETURNING *',
-            [userId, roleId],
-        );
-        return result[1];
     }
 }

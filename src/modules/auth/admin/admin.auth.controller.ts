@@ -17,16 +17,16 @@ import {
 import { UserLoginDto } from '../../../common/dto/UserLoginDto';
 import { AccessToken } from '../../../common/model';
 import { UserDto } from '../../user/dto/UserDto';
-import { AdminAuthService } from './auth.service';
+import { AdminAuthService } from './admin.auth.service';
 import { AdminRegistrationDto } from './dto/AdminRegistrationDto';
-import { LocalAuthGuard } from './guard/local-auth.guard';
+import { AdminLocalAuthGuard } from './guard/admin.local-auth.guard';
 
 @Controller('auth/admin')
 @ApiTags('auth/admin')
 export class AdminAuthController {
     constructor(private adminAuthService: AdminAuthService) {}
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(AdminLocalAuthGuard)
     @Post('login')
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({})

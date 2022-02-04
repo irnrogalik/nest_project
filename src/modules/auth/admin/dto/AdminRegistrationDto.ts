@@ -32,4 +32,9 @@ export class AdminRegistrationDto {
     @IsPhoneNumber()
     @IsNotEmpty()
     phone: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    secretKey: string;
 }
