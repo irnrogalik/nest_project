@@ -1,11 +1,13 @@
-import { Global, HttpModule, Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+import { Global, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
-import { ConfigService } from './services/config.service';
+import { TypeOrmConfigService } from './services/type.orm.config.service';
 
 @Global()
 @Module({
-    providers: [ConfigService],
-    imports: [HttpModule],
-    exports: [ConfigService, HttpModule],
+    providers: [TypeOrmConfigService],
+    imports: [HttpModule, ConfigModule],
+    exports: [TypeOrmConfigService, HttpModule],
 })
 export class SharedModule {}

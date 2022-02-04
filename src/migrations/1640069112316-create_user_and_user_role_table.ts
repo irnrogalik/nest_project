@@ -1,5 +1,7 @@
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
+import { Role } from '../common/model';
+
 export class createUserTable1640069112316 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`
@@ -12,7 +14,7 @@ export class createUserTable1640069112316 implements MigrationInterface {
                 "email"         character varying NOT NULL,
                 "password"      character varying NOT NULL,
                 "phone"         character varying NOT NULL,
-                "address"       character varying NOT NULL,
+                "address"       character varying DEFAULT NULL,
                 PRIMARY KEY(id),
                 CONSTRAINT email_unique UNIQUE (email)
             );
@@ -57,8 +59,8 @@ export class createUserTable1640069112316 implements MigrationInterface {
         await queryRunner.query(`
         INSERT INTO role (id, name)
         VALUES
-            ('8ca56fe7-5b1b-4348-a43f-c3f916915b02', 'admin'),
-            ('9d41f29e-3022-4e44-b95d-ff083f388013', 'user');
+            ('8ca56fe7-5b1b-4348-a43f-c3f916915b02', '${Role.ADMIN}'),
+            ('9d41f29e-3022-4e44-b95d-ff083f388013', '${Role.USER}');
         `);
     }
 
