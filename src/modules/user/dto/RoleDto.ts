@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { AbstractDto } from '../../../common/dto/AbstractDto';
-import { Role } from '../../../common/model';
 import type { RoleEntity } from '../entity/role.entity';
+import { Role } from '../role.enum';
 
 export class RoleDto extends AbstractDto {
     @ApiProperty()

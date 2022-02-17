@@ -3,7 +3,8 @@ export interface AccessToken {
     access_token: string;
 }
 
-export enum Role {
-    ADMIN = 'admin',
-    USER = 'user',
+export interface JwtUserPayload {
+    id: string;
+    email: string;
+    role: string;
 }

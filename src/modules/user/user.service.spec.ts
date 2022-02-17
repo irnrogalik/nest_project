@@ -3,6 +3,9 @@ import '../../boilerplate.polyfill';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
+import { RoleRepository } from './repository/role.repository';
+import { UserRepository } from './repository/user.repository';
+import { UserRoleRepository } from './repository/user.role.repository';
 import {
     newUser,
     newUserDto,
@@ -14,7 +17,6 @@ import {
     userToGetByEmailResult,
     userToRemove,
 } from './user.fixture';
-import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
 describe('User Service', () => {
@@ -31,7 +33,12 @@ describe('User Service', () => {
             }),
         };
         const app: TestingModule = await Test.createTestingModule({
-            providers: [UserRepositoryProvider, UserService],
+            providers: [
+                UserRepositoryProvider,
+                UserService,
+                RoleRepository,
+                UserRoleRepository,
+            ],
         }).compile();
 
         userService = app.get<UserService>(UserService);

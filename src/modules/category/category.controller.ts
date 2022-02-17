@@ -6,9 +6,11 @@ import {
     HttpStatus,
     Post,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiCreatedResponse,
     ApiNoContentResponse,
     ApiNotFoundResponse,
@@ -17,7 +19,11 @@ import {
 } from '@nestjs/swagger';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { Roles } from '../../decorators/roles.decorator';
 import { UUIDParam } from '../../decorators/uuid.decorators';
+import { AdminJwtAuthGuard } from '../auth/admin/guard/admin.jwt-auth.guard';
+import { Role } from '../user/role.enum';
+import { RoleGuard } from '../user/role.guard';
 import { CategoryService } from './category.service';
 import { CategoryAddDto } from './dto/CategoryAddDto';
 import { CategoryDto } from './dto/CategoryDto';
@@ -61,6 +67,9 @@ export class CategoryController {
     }
 
     @Post('add')
+    @ApiBearerAuth()
+    @UseGuards(AdminJwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     @ApiCreatedResponse({
         description: 'Category was successfully added',
@@ -77,6 +86,9 @@ export class CategoryController {
     }
 
     @Post('remove/:id')
+    @ApiBearerAuth()
+    @UseGuards(AdminJwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiNoContentResponse({
         description: 'Category was successfully removed',

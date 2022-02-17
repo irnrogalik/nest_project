@@ -1,11 +1,11 @@
 import { plainToInstance } from 'class-transformer';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
-import { Role } from '../../common/model';
 import type { UserRegistrationDto } from '../auth/user/dto/UserRegistrationDto';
 import type { UserDto } from './dto/UserDto';
 import type { UserWithRoleDto } from './dto/UserWithRoleDto';
 import { UserEntity } from './entity/user.entity';
+import { Role } from './role.enum';
 
 export const pageOptions: PageOptionsDto = new PageOptionsDto();
 

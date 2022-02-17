@@ -2,12 +2,12 @@ import { plainToInstance } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
-import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
-import { getHash, paginate } from '../../shared/functions';
-import type { AdminRegistrationDto } from '../auth/admin/dto/AdminRegistrationDto';
-import type { UserRegistrationDto } from '../auth/user/dto/UserRegistrationDto';
-import { UserWithRoleDto } from './dto/UserWithRoleDto';
-import { UserEntity } from './entity/user.entity';
+import type { PageOptionsDto } from '../../../common/dto/PageOptionsDto';
+import { getHash, paginate } from '../../../shared/functions';
+import type { AdminRegistrationDto } from '../../auth/admin/dto/AdminRegistrationDto';
+import type { UserRegistrationDto } from '../../auth/user/dto/UserRegistrationDto';
+import { UserWithRoleDto } from '../dto/UserWithRoleDto';
+import { UserEntity } from '../entity/user.entity';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {

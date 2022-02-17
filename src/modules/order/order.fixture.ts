@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { plainToInstance } from 'class-transformer';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
@@ -22,18 +23,21 @@ export const getProductsInCart: ProductInCartDto[] = plainToInstance(
             id: '109a6e18-4a19-45a3-91d1-7ff2b092fb49',
             name: 'Popcorn',
             amount: 99,
+            quantity: 1,
             tax_value: [null],
         },
         {
             id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb',
             name: '6lb bag of Skittles',
             amount: 1600,
+            quantity: 1,
             tax_value: [null],
         },
         {
             id: 'efd5dee6-81d4-4f03-8363-d8fd2fb394b5',
             name: 'Walkman',
             amount: 9999,
+            quantity: 1,
             tax_value: [10],
         },
     ],
@@ -45,18 +49,21 @@ export const cartList: CartFullDto = {
             id: '109a6e18-4a19-45a3-91d1-7ff2b092fb49',
             name: 'Popcorn',
             amount: 0.99,
+            quantity: 1,
             taxValue: [null],
         },
         {
             id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb',
             name: '6lb bag of Skittles',
             amount: 16,
+            quantity: 1,
             taxValue: [null],
         },
         {
             id: 'efd5dee6-81d4-4f03-8363-d8fd2fb394b5',
             name: 'Walkman',
             amount: 99.99,
+            quantity: 1,
             taxValue: [10],
         },
     ],

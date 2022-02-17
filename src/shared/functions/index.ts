@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-named-as-default
 import * as bcrypt from 'bcrypt';
+// eslint-disable-next-line import/no-named-as-default
 import Decimal from 'decimal.js-light';
 
 import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
