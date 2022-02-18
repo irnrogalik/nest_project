@@ -46,7 +46,6 @@ export class AuthService {
     login(user: JwtUserPayload): AccessToken {
         const payload: JwtUserPayload = {
             id: user.id,
-            email: user.email,
             role: user.role,
         };
         return {

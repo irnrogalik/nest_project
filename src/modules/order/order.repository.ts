@@ -27,11 +27,9 @@ export class OrderRepository extends Repository<OrderEntity> {
             }')`,
         );
         productsInCart.map((product) => {
-            cartDto.filter((cartProduct) => {
-                if (cartProduct.id === product.id) {
-                    product.quantity = cartProduct.quantity;
-                }
-            });
+            product.quantity = cartDto.find(
+                (cartProduct) => cartProduct.id === product.id,
+            )?.quantity;
         });
         return plainToInstance(ProductInCartDto, productsInCart);
     }

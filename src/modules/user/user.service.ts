@@ -62,4 +62,11 @@ export class UserService {
         );
         return existingUser || null;
     }
+
+    async getUserById(userId: string): Promise<UserWithRoleDto | null> {
+        const existingUser: UserWithRoleDto = await this.userRepository.getUserById(
+            userId,
+        );
+        return existingUser || null;
+    }
 }

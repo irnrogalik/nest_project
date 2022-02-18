@@ -49,4 +49,16 @@ export class UserRepository extends Repository<UserEntity> {
         );
         return user ? plainToInstance(UserWithRoleDto, user[0]) : null;
     }
+
+    async getUserById(userId: string): Promise<UserWithRoleDto | null> {
+        const user: UserEntity = await this.query(
+            `SELECT u.id, u.email, u.password, r.name as role
+            FROM "user" u
+            LEFT JOIN user_role ur on ur.user_id = u.id
+            LEFT JOIN role r on r.id = ur.role_id
+            WHERE user_id = $1`,
+            [userId],
+        );
+        return user ? plainToInstance(UserWithRoleDto, user[0]) : null;
+    }
 }

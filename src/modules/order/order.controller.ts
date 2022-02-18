@@ -143,7 +143,7 @@ export class OrderController {
         @Request() req: { user: JwtUserPayload },
         @Query() pageOptions: PageOptionsDto,
     ): Promise<OrderDto[]> {
-        const userId: string = req.user?.id;
+        const userId: string = req.user.id;
         const orderList: OrderDto[] = await this.orderService.getUserOrderList(
             userId,
             pageOptions,

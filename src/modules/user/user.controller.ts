@@ -93,9 +93,9 @@ export class UserController {
     async getProfile(
         @Request() req: { user: JwtUserPayload },
     ): Promise<UserWithRoleDto> {
-        const email: string = req.user?.email;
-        const result: UserWithRoleDto = await this.userService.getUserByEmail(
-            email,
+        const userId: string = req.user.id;
+        const result: UserWithRoleDto = await this.userService.getUserById(
+            userId,
         );
         return result;
     }

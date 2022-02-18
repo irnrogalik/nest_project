@@ -1,6 +1,6 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
-import { IsArray, IsInt, IsOptional, Min } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
+import { IsArray, IsInt, Min } from 'class-validator';
 
 import { ToDecimal } from '../../../decorators/amount.decorator';
 export class ProductInCartDto {
@@ -14,15 +14,13 @@ export class ProductInCartDto {
     @ToDecimal()
     amount: number;
 
-    @ApiPropertyOptional({
+    @ApiProperty({
         minimum: 1,
         default: 1,
     })
-    @Type(() => Number)
     @IsInt()
     @Min(1)
-    @IsOptional()
-    quantity = 1;
+    quantity: number;
 
     @ApiProperty()
     @IsArray()
