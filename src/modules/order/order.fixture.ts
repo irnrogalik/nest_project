@@ -10,6 +10,8 @@ import { OrderEntity } from './entity/order.entity';
 
 export const pageOptions: PageOptionsDto = new PageOptionsDto();
 
+export const userId = '0c9b3178-bf8d-4f28-954c-0dc94fe23460';
+
 export const cartDto: CartDto[] = [
     { id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', quantity: 1 },
     { id: 'efd5dee6-81d4-4f03-8363-d8fd2fb394b5', quantity: 1 },

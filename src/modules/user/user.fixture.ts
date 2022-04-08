@@ -57,9 +57,18 @@ export const newUser: UserEntity = plainToInstance(UserEntity, {
 
 export const newUserDto: UserDto = newUser.toDto();
 
-export const userToGetByEmail = '0c9b3178-bf8d-4f28-954c-0dc94fe23460';
+export const userToGetByEmail = 'john_Smith@email.com';
 
 export const userToGetByEmailResult: UserWithRoleDto = {
+    id: '0c9b3178-bf8d-4f28-954c-0dc94fe23460',
+    email: 'john_Smith@email.com',
+    password: '$2b$10$xk7u5Tvrw2IXd/oNNzEkTenOItozImgX04dx4048unVrmCGBQ46Wu',
+    role: Role.USER,
+};
+
+export const userToGetById = '0c9b3178-bf8d-4f28-954c-0dc94fe23460';
+
+export const userToGetByIdResult: UserWithRoleDto = {
     id: '0c9b3178-bf8d-4f28-954c-0dc94fe23460',
     email: 'john_Smith@email.com',
     password: '$2b$10$xk7u5Tvrw2IXd/oNNzEkTenOItozImgX04dx4048unVrmCGBQ46Wu',

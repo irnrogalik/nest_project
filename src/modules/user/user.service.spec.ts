@@ -15,6 +15,8 @@ import {
     userToAdd,
     userToGetByEmail,
     userToGetByEmailResult,
+    userToGetById,
+    userToGetByIdResult,
     userToRemove,
 } from './user.fixture';
 import { UserService } from './user.service';
@@ -30,6 +32,7 @@ describe('User Service', () => {
                 addUser: jest.fn(() => newUser),
                 removeUser: jest.fn(() => true),
                 getUserByEmail: jest.fn(() => userToGetByEmailResult),
+                getUserById: jest.fn(() => userToGetByIdResult),
             }),
         };
         const app: TestingModule = await Test.createTestingModule({
@@ -62,6 +65,14 @@ describe('User Service', () => {
         it('should return user with role', async () => {
             expect(await userService.getUserByEmail(userToGetByEmail)).toEqual(
                 userToGetByEmailResult,
+            );
+        });
+    });
+
+    describe('get user by email', () => {
+        it('should return user with role', async () => {
+            expect(await userService.getUserById(userToGetById)).toEqual(
+                userToGetByIdResult,
             );
         });
     });
