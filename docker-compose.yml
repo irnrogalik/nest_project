@@ -2,7 +2,7 @@ version: "3.8"
 services:
   app:
     env_file:
-      - .development.env
+      - .dev.env
     environment:
       DB_HOST: host.docker.internal
     container_name: nest_app

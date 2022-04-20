@@ -24,7 +24,7 @@ import { SharedModule } from './shared/shared.module';
         UserModule,
         AuthModule,
         ConfigModule.forRoot({
-            envFilePath: '.development.env',
+            envFilePath: `${process.env.NODE_ENV || 'dev'}.env`,
         }),
         TypeOrmModule.forRootAsync({
             imports: [SharedModule],
