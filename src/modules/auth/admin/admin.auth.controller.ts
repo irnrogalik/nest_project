@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger';
 
 import { UserLoginDto } from '../../../common/dto/UserLoginDto';
+import type { JwtUserPayload } from '../../../common/model';
 import { AccessToken } from '../../../common/model';
 import { UserDto } from '../../user/dto/UserDto';
 import { AdminAuthService } from './admin.auth.service';
@@ -33,7 +34,10 @@ export class AdminAuthController {
     @ApiBadRequestResponse({
         description: 'Incorrect username or password',
     })
-    login(@Body() user: UserLoginDto, @Request() req): AccessToken {
+    login(
+        @Body() user: UserLoginDto,
+        @Request() req: { user: JwtUserPayload },
+    ): AccessToken {
         return this.adminAuthService.login(req.user);
     }
 

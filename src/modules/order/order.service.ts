@@ -43,7 +43,7 @@ export class OrderService {
         };
 
         for (const product of products) {
-            const amount = toInteger(product.amount) || 0;
+            const amount = (toInteger(product.amount) || 0) * product.quantity;
             const taxValue = product.taxValue;
             let tax = 0;
 
@@ -63,10 +63,11 @@ export class OrderService {
         return orderListInCart;
     }
 
-    async addOrder(cartDto: CartDto[]): Promise<CartFullDto> {
+    async addOrder(cartDto: CartDto[], userId: string): Promise<CartFullDto> {
         const orderList: CartFullDto = await this.getCart(cartDto);
         const order: Partial<OrderDto> = await this.orderRepository.addOrder(
             orderList.order,
+            userId,
         );
         if (!order) {
             throw new BadRequestException('The order was not created');
@@ -84,7 +85,7 @@ export class OrderService {
             const orderListDto: Partial<OrderListDto> = {
                 orderId,
                 productId: product.id,
-                // quantity: product.quantity,
+                quantity: product.quantity,
             };
             const isAdded: boolean = await this.orderRepository.addOrderList(
                 orderListDto,
@@ -104,5 +105,16 @@ export class OrderService {
             );
         }
         return true;
+    }
+
+    async getUserOrderList(
+        userId: string,
+        pageOptions: PageOptionsDto,
+    ): Promise<OrderDto[]> {
+        const orderList: OrderEntity[] = await this.orderRepository.getUserOrderList(
+            userId,
+            pageOptions,
+        );
+        return orderList.toDtos();
     }
 }

@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
-import type { Role } from '../../common/model';
-import { RoleEntity } from './entity/role.entity';
+import { RoleEntity } from '../entity/role.entity';
+import type { Role } from '../role.enum';
 
 @EntityRepository(RoleEntity)
 export class RoleRepository extends Repository<RoleEntity> {

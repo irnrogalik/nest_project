@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 import { EntityRepository } from 'typeorm/decorator/EntityRepository';
 
-import type { UserRoleDto } from './dto/UserRoleDto';
-import { UserRoleEntity } from './entity/user.role.entity';
+import type { UserRoleDto } from '../dto/UserRoleDto';
+import { UserRoleEntity } from '../entity/user.role.entity';
 
 @EntityRepository(UserRoleEntity)
 export class UserRoleRepository extends Repository<UserRoleEntity> {

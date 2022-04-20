@@ -26,13 +26,21 @@ export class OrderRepository extends Repository<OrderEntity> {
                 ${cartDto.map((product) => product.id)}
             }')`,
         );
+        productsInCart.map((product) => {
+            product.quantity = cartDto.find(
+                (cartProduct) => cartProduct.id === product.id,
+            )?.quantity;
+        });
         return plainToInstance(ProductInCartDto, productsInCart);
     }
 
-    async addOrder(order: Partial<OrderDto>): Promise<OrderEntity> {
+    async addOrder(
+        order: Partial<OrderDto>,
+        userId: string,
+    ): Promise<OrderEntity> {
         const newOrder: OrderEntity[] = await this.query(
-            'INSERT INTO "order" (order_tax, total) VALUES ($1, $2) RETURNING *',
-            [toInteger(order.orderTax), toInteger(order.total)],
+            'INSERT INTO "order" (order_tax, total, user_id) VALUES ($1, $2, $3) RETURNING *',
+            [toInteger(order.orderTax), toInteger(order.total), userId],
         );
         return plainToInstance(OrderEntity, newOrder[0]);
     }
@@ -51,5 +59,16 @@ export class OrderRepository extends Repository<OrderEntity> {
             boolean,
         ] = await this.query('DELETE FROM "order" WHERE id = $1', [orderId]);
         return result[1];
+    }
+
+    async getUserOrderList(
+        userId: string,
+        pageOptions: PageOptionsDto,
+    ): Promise<OrderEntity[]> {
+        const list: OrderEntity[] = await this.query(
+            paginate('SELECT * FROM "order" WHERE user_id = $1', pageOptions),
+            [userId],
+        );
+        return plainToInstance(OrderEntity, list);
     }
 }

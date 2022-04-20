@@ -6,9 +6,11 @@ import {
     HttpStatus,
     Post,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiCreatedResponse,
     ApiNoContentResponse,
     ApiNotFoundResponse,
@@ -18,7 +20,11 @@ import {
 } from '@nestjs/swagger';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { Roles } from '../../decorators/roles.decorator';
 import { UUIDParam } from '../../decorators/uuid.decorators';
+import { AdminJwtAuthGuard } from '../auth/admin/guard/admin.jwt-auth.guard';
+import { Role } from '../user/role.enum';
+import { RoleGuard } from '../user/role.guard';
 import { ProductAddDto } from './dto/ProductAddDto';
 import { ProductCategoryListDto } from './dto/ProductCategoryListDto';
 import { ProductDto } from './dto/ProductDto';
@@ -49,6 +55,9 @@ export class ProductController {
     }
 
     @Post('add')
+    @ApiBearerAuth()
+    @UseGuards(AdminJwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     @ApiCreatedResponse({
         description: 'Product was successfully added',
@@ -67,6 +76,9 @@ export class ProductController {
     }
 
     @Post('remove/:id')
+    @ApiBearerAuth()
+    @UseGuards(AdminJwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiNoContentResponse({
         description: 'Product was successfully removed',

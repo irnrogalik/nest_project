@@ -3,6 +3,9 @@ import '../../boilerplate.polyfill';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
+import { RoleRepository } from './repository/role.repository';
+import { UserRepository } from './repository/user.repository';
+import { UserRoleRepository } from './repository/user.role.repository';
 import {
     newUser,
     newUserDto,
@@ -12,9 +15,10 @@ import {
     userToAdd,
     userToGetByEmail,
     userToGetByEmailResult,
+    userToGetById,
+    userToGetByIdResult,
     userToRemove,
 } from './user.fixture';
-import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
 describe('User Service', () => {
@@ -28,10 +32,16 @@ describe('User Service', () => {
                 addUser: jest.fn(() => newUser),
                 removeUser: jest.fn(() => true),
                 getUserByEmail: jest.fn(() => userToGetByEmailResult),
+                getUserById: jest.fn(() => userToGetByIdResult),
             }),
         };
         const app: TestingModule = await Test.createTestingModule({
-            providers: [UserRepositoryProvider, UserService],
+            providers: [
+                UserRepositoryProvider,
+                UserService,
+                RoleRepository,
+                UserRoleRepository,
+            ],
         }).compile();
 
         userService = app.get<UserService>(UserService);
@@ -55,6 +65,14 @@ describe('User Service', () => {
         it('should return user with role', async () => {
             expect(await userService.getUserByEmail(userToGetByEmail)).toEqual(
                 userToGetByEmailResult,
+            );
+        });
+    });
+
+    describe('get user by email', () => {
+        it('should return user with role', async () => {
+            expect(await userService.getUserById(userToGetById)).toEqual(
+                userToGetByIdResult,
             );
         });
     });

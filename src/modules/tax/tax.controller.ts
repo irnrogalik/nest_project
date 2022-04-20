@@ -6,9 +6,11 @@ import {
     HttpStatus,
     Post,
     Query,
+    UseGuards,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiCreatedResponse,
     ApiNoContentResponse,
     ApiNotFoundResponse,
@@ -17,7 +19,11 @@ import {
 } from '@nestjs/swagger';
 
 import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
+import { Roles } from '../../decorators/roles.decorator';
 import { UUIDParam } from '../../decorators/uuid.decorators';
+import { AdminJwtAuthGuard } from '../auth/admin/guard/admin.jwt-auth.guard';
+import { Role } from '../user/role.enum';
+import { RoleGuard } from '../user/role.guard';
 import { TaxAddDto } from './dto/TaxAddDto';
 import { TaxDto } from './dto/TaxDto';
 import { TaxService } from './tax.service';
@@ -60,6 +66,9 @@ export class TaxController {
     }
 
     @Post('add')
+    @ApiBearerAuth()
+    @UseGuards(AdminJwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     @ApiCreatedResponse({
         description: 'Tax was successfully added',
@@ -74,6 +83,9 @@ export class TaxController {
     }
 
     @Post('remove/:id')
+    @ApiBearerAuth()
+    @UseGuards(AdminJwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiNoContentResponse({
         description: 'Tax was successfully removed',

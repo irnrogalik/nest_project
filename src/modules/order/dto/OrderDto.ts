@@ -18,8 +18,8 @@ export class OrderDto extends AbstractDto {
 
     constructor(order: OrderEntity) {
         super(order);
-        this.orderTax = order.orderTax;
+        this.orderTax = order.order_tax;
         this.total = order.total;
-        this.userId = order.userId;
+        this.userId = order.user_id;
     }
 }

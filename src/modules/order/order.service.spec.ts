@@ -11,6 +11,7 @@ import {
     orderListEntity,
     orderToRemove,
     pageOptions,
+    userId,
 } from './order.fixture';
 import { OrderRepository } from './order.repository';
 import { OrderService } from './order.service';
@@ -47,7 +48,9 @@ describe('Order Service', () => {
 
     describe('add product', () => {
         it('should return created order', async () => {
-            expect(await orderService.addOrder(cartDto)).toEqual(cartList);
+            expect(await orderService.addOrder(cartDto, userId)).toEqual(
+                cartList,
+            );
         });
     });
 

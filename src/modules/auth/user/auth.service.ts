@@ -3,15 +3,16 @@ import {
     ConflictException,
     Injectable,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { plainToInstance } from 'class-transformer';
 
 import type { UserLoginDto } from '../../../common/dto/UserLoginDto';
-import type { AccessToken } from '../../../common/model';
-import { Role } from '../../../common/model';
+import type { AccessToken, JwtUserPayload } from '../../../common/model';
 import { comparePasswordWithHash } from '../../../shared/functions';
 import type { UserDto } from '../../user/dto/UserDto';
 import { UserWithRoleDto } from '../../user/dto/UserWithRoleDto';
+import { Role } from '../../user/role.enum';
 import { UserService } from '../../user/user.service';
 import type { UserRegistrationDto } from './dto/UserRegistrationDto';
 
@@ -20,6 +21,7 @@ export class AuthService {
     constructor(
         private userService: UserService,
         private jwtService: JwtService,
+        private configService: ConfigService,
     ) {}
 
     async validateUser(user: UserLoginDto): Promise<UserWithRoleDto> {
@@ -41,11 +43,16 @@ export class AuthService {
     }
 
     // eslint-disable-next-line camelcase
-    login(user: UserWithRoleDto): AccessToken {
-        const payload = { id: user.id, email: user.email, role: user.role };
+    login(user: JwtUserPayload): AccessToken {
+        const payload: JwtUserPayload = {
+            id: user.id,
+            role: user.role,
+        };
         return {
             // eslint-disable-next-line camelcase
-            access_token: this.jwtService.sign(payload),
+            access_token: this.jwtService.sign(payload, {
+                secret: this.configService.get<string>('JWT_USER_SECRET_KEY'),
+            }),
         };
     }
 

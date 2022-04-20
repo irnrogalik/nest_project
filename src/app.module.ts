@@ -10,9 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
-import { RoleModule } from './modules/role/role.module';
 import { TaxModule } from './modules/tax/tax.module';
-import { UserRoleModule } from './modules/user.role/user.role.module';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmConfigService } from './shared/services/type.orm.config.service';
 import { SharedModule } from './shared/shared.module';
@@ -25,10 +23,8 @@ import { SharedModule } from './shared/shared.module';
         OrderModule,
         UserModule,
         AuthModule,
-        RoleModule,
-        UserRoleModule,
         ConfigModule.forRoot({
-            envFilePath: '.development.env',
+            envFilePath: `${process.env.NODE_ENV || 'dev'}.env`,
         }),
         TypeOrmModule.forRootAsync({
             imports: [SharedModule],
