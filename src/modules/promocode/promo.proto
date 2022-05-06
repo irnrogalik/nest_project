@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package promo;
+
+service PromoCodeService {
+	rpc AddPromoCode (AddPromoCode) returns (PromoCode) {}
+	rpc RemovePromoCode (PromoCodeName) returns (PromoCodeBoolResponse) {}
+	rpc IsPromoCodeValid (PromoCodeName) returns (PromoCodeBoolResponse) {}
+	rpc MarkPromoCodeAsUsed (PromoCodeName) returns (PromoCodeBoolResponse) {}
+	rpc GetListOfPromocodes (GetPromoCodeList) returns (PromoCodeList) {}
+}
+
+message PromoCode {
+	string id = 1;
+	string name = 2;
+	int32 percent = 3;
+	bool isUsed = 4;
+	bool isOneTime = 5;
+	string startDate = 6;
+	string endDate = 7;
+}
+
+message AddPromoCode {
+	string name = 1;
+	int32 percent = 2;
+	bool isOneTime = 3;
+	string startDate = 4;
+	string endDate = 5;
+}
+
+message PromoCodeName {
+	string name = 1;
+}
+
+message PromoCodeBoolResponse {
+	bool response = 1;
+}
+
+message GetPromoCodeList {}
+
+message PromoCodeList {
+	repeated PromoCode promocodes = 1;
+}
