@@ -1,12 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-    IsNotEmpty,
-    IsNumberString,
-    IsOptional,
-    IsString,
-} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 
-import { Trim } from '../../../decorators/transforms.decorator';
+import { ToLowerCase, Trim } from '../../../decorators/transforms.decorator';
 import type { IAddPromoCode } from '../promo.interface';
 
 export class PromocodeAddDto implements IAddPromoCode {
@@ -14,23 +9,22 @@ export class PromocodeAddDto implements IAddPromoCode {
     @IsString()
     @IsNotEmpty()
     @Trim()
+    @ToLowerCase()
     name: string;
 
     @ApiProperty()
-    @IsNumberString()
     @IsNotEmpty()
-    @Trim()
+    @IsInt()
+    @Min(1)
+    @Max(100)
     percent: number;
 
-    @ApiProperty()
-    @IsOptional()
-    isOneTime: boolean;
+    @ApiPropertyOptional({ default: false })
+    isOneTime = false;
 
-    @ApiProperty()
-    @IsOptional()
-    startDate: string;
+    @ApiPropertyOptional({ default: null })
+    startDate: Date = null;
 
-    @ApiProperty()
-    @IsOptional()
-    endDate: string;
+    @ApiPropertyOptional({ default: null })
+    endDate: Date = null;
 }

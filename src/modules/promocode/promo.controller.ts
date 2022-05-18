@@ -5,6 +5,7 @@ import {
     HttpCode,
     HttpStatus,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 
+import { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { Roles } from '../../decorators/roles.decorator';
 import { AdminJwtAuthGuard } from '../auth/admin/guard/admin.jwt-auth.guard';
 import { Role } from '../user/role.enum';
@@ -25,18 +27,20 @@ import { PromocodeAddDto } from './dto/PromocodeAddDto';
 import { PromoCodeBoolResponseDto } from './dto/PromoCodeBoolResponseDto';
 import { PromocodeDto } from './dto/PromocodeDto';
 import { PromocodeNameDto } from './dto/PromocodeNameDto';
+import { PromocodeRemoveDto } from './dto/PromocodeRemoveDto';
+import type { IPromoCode, IPromoCodeBoolResponse } from './promo.interface';
 import { PromocodeService } from './promo.service';
 
 @Controller('promocode')
 @ApiTags('promocode')
+@ApiBearerAuth()
+@UseGuards(AdminJwtAuthGuard, RoleGuard)
+@Roles(Role.ADMIN)
 export class PromocodeController {
     constructor(private promocodeService: PromocodeService) {}
 
     @Get('getList')
-    @ApiBearerAuth()
-    @UseGuards(AdminJwtAuthGuard, RoleGuard)
-    @Roles(Role.ADMIN)
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         description: 'Get promocode list',
         type: [PromocodeDto],
@@ -44,15 +48,16 @@ export class PromocodeController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting list of promocodes',
     })
-    getListOfPromocodes(): Observable<string> {
-        const newPromocode = this.promocodeService.getListOfPromocodes();
-        return newPromocode;
+    getListOfPromocodes(
+        @Query() pageOptionsDto: PageOptionsDto,
+    ): Observable<IPromoCode[]> {
+        const promocodes = this.promocodeService.getListOfPromocodes(
+            pageOptionsDto,
+        );
+        return promocodes;
     }
 
     @Post('add')
-    @ApiBearerAuth()
-    @UseGuards(AdminJwtAuthGuard, RoleGuard)
-    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.CREATED)
     @ApiCreatedResponse({
         description: 'New promocode was successfully added',
@@ -61,17 +66,16 @@ export class PromocodeController {
     @ApiBadRequestResponse({
         description: 'Error occurred during adding promocode',
     })
-    addPromoCode(@Body() promocodeAddDto: PromocodeAddDto): Observable<string> {
-        const newPromocode = this.promocodeService.addPromoCode(
+    async addPromoCode(
+        @Body() promocodeAddDto: PromocodeAddDto,
+    ): Promise<Observable<IPromoCode>> {
+        const newPromocode = await this.promocodeService.addPromoCode(
             promocodeAddDto,
         );
         return newPromocode;
     }
 
     @Post('remove')
-    @ApiBearerAuth()
-    @UseGuards(AdminJwtAuthGuard, RoleGuard)
-    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         description: 'Promocode was successfully removed',
@@ -83,17 +87,14 @@ export class PromocodeController {
     @ApiBadRequestResponse({
         description: 'Error occurred during removing promocode',
     })
-    removePromoCode(
-        @Body() promocodeName: PromocodeNameDto,
-    ): Observable<string> {
-        const result = this.promocodeService.removePromoCode(promocodeName);
+    async removePromoCode(
+        @Body() promocode: PromocodeRemoveDto,
+    ): Promise<Observable<IPromoCodeBoolResponse>> {
+        const result = await this.promocodeService.removePromoCode(promocode);
         return result;
     }
 
     @Post('validate')
-    @ApiBearerAuth()
-    @UseGuards(AdminJwtAuthGuard, RoleGuard)
-    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         description: 'Validate promocode',
@@ -102,17 +103,14 @@ export class PromocodeController {
     @ApiBadRequestResponse({
         description: 'Error occurred during validations promocode',
     })
-    isPromoCodeValid(
+    async isPromoCodeValid(
         @Body() promocodeName: PromocodeNameDto,
-    ): Observable<string> {
+    ): Promise<Observable<IPromoCodeBoolResponse>> {
         const result = this.promocodeService.isPromoCodeValid(promocodeName);
         return result;
     }
 
     @Post('markAsUsed')
-    @ApiBearerAuth()
-    @UseGuards(AdminJwtAuthGuard, RoleGuard)
-    @Roles(Role.ADMIN)
     @HttpCode(HttpStatus.OK)
     @ApiOkResponse({
         description: 'Mark promocode as used',
@@ -121,9 +119,9 @@ export class PromocodeController {
     @ApiBadRequestResponse({
         description: 'Error occurred during marking promocode as used',
     })
-    markPromoCodeAsUsed(
+    async markPromoCodeAsUsed(
         @Body() promocodeName: PromocodeNameDto,
-    ): Observable<string> {
+    ): Promise<Observable<IPromoCodeBoolResponse>> {
         const result = this.promocodeService.markPromoCodeAsUsed(promocodeName);
         return result;
     }

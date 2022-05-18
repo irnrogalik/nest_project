@@ -1,30 +1,44 @@
 import type { Observable } from 'rxjs';
 
+import type { PromocodeState } from './promocode.enum';
+
 export interface IPromoCodeService {
-    addPromoCode(promocode: IAddPromoCode): Observable<string>;
-    removePromoCode(promoName: IPromoCodeName): Observable<string>;
-    isPromoCodeValid(promoName: IPromoCodeName): Observable<string>;
-    markPromoCodeAsUsed(promoName: IPromoCodeName): Observable<string>;
-    // eslint-disable-next-line no-empty-pattern
-    getListOfPromocodes({}: IList): Observable<string>;
+    addPromoCode(promocode: IAddPromoCode): Observable<IPromoCode>;
+    removePromoCode(
+        promocode: IRemovePromoCode,
+    ): Observable<IPromoCodeBoolResponse>;
+    isPromoCodeValid(
+        promoName: IPromoCodeName,
+    ): Observable<IPromoCodeBoolResponse>;
+    markPromoCodeAsUsed(
+        promoName: IPromoCodeName,
+    ): Observable<IPromoCodeBoolResponse>;
+    getListOfPromocodes(pageOptions: IPageOptions): Observable<IPromoCode[]>;
+    isPromoCodeExist(
+        promoName: IPromoCodeName,
+    ): Observable<IPromoCodeBoolResponse>;
 }
 
 export interface IPromoCode {
     id: string;
     name: string;
+    createdAt: string;
     percent: number;
-    isUsed: boolean;
+    currentState: PromocodeState;
     isOneTime: boolean;
+    usedDate: string;
     startDate: string;
     endDate: string;
+    deletedAt: string;
+    deletedReason: string;
 }
 
 export interface IAddPromoCode {
     name: string;
     percent: number;
     isOneTime: boolean;
-    startDate: string;
-    endDate: string;
+    startDate: string | Date;
+    endDate: string | Date;
 }
 
 export interface IPromoCodeName {
@@ -35,5 +49,12 @@ export interface IPromoCodeBoolResponse {
     response: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IList {}
+export interface IRemovePromoCode {
+    name: string;
+    deletedReason: string;
+}
+
+export interface IPageOptions {
+    page: number;
+    limit: number;
+}
