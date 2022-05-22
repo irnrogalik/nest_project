@@ -1,7 +1,5 @@
 import type { Observable } from 'rxjs';
 
-import type { PromocodeState } from './promocode.enum';
-
 export interface IPromoCodeService {
     addPromoCode(promocode: IAddPromoCode): Observable<IPromoCode>;
     removePromoCode(
@@ -24,7 +22,6 @@ export interface IPromoCode {
     name: string;
     createdAt: string;
     percent: number;
-    currentState: PromocodeState;
     isOneTime: boolean;
     usedDate: string;
     startDate: string;

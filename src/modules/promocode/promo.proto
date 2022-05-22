@@ -16,13 +16,12 @@ message PromoCode {
 	string createdAt = 2;
 	string name = 3;
 	int32 percent = 4;
-	string currentState = 5;
-	bool isOneTime = 6;
-	string usedDate = 7;
-	string startDate = 8;
-	string endDate = 9;
-	string deletedAt = 10;
-	string deletedReason = 11;
+	bool isOneTime = 5;
+	string usedDate = 6;
+	string startDate = 7;
+	string endDate = 8;
+	string deletedAt = 9;
+	string deletedReason = 10;
 }
 
 message AddPromoCode {

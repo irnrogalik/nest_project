@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import type { IPromoCode } from '../promo.interface';
-import { PromocodeState } from '../promocode.enum';
 
 export class PromocodeDto implements IPromoCode {
     @ApiProperty()
@@ -15,9 +14,6 @@ export class PromocodeDto implements IPromoCode {
 
     @ApiProperty()
     percent: number;
-
-    @ApiProperty()
-    currentState: PromocodeState;
 
     @ApiProperty()
     isOneTime: boolean;
