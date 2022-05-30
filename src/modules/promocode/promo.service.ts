@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import type { Observable } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import type { PromocodeAddDto } from './dto/PromocodeAddDto';
@@ -20,16 +21,16 @@ export class PromocodeService {
     }
     getListOfPromocodes(
         pageOptionsDto: PageOptionsDto,
-    ): Observable<IPromoCode[]> {
-        const promocodes = this.promoGRPCService.getListOfPromocodes(
-            pageOptionsDto,
-        );
+    ): Observable<IPromoCode[] | any> {
+        const promocodes = this.promoGRPCService
+            .getListOfPromocodes(pageOptionsDto)
+            .pipe(catchError((e) => of({ error: e.message })));
         return promocodes;
     }
 
     async addPromoCode(
         promocodeAddDto: PromocodeAddDto,
-    ): Promise<Observable<IPromoCode>> {
+    ): Promise<Observable<IPromoCode | any>> {
         const isExist = await this.isPromoCodeExist({
             name: promocodeAddDto.name,
         });
@@ -39,9 +40,9 @@ export class PromocodeService {
                 startDate: new Date(promocodeAddDto.startDate).toString(),
                 endDate: new Date(promocodeAddDto.endDate).toString(),
             };
-            const newPromocode = this.promoGRPCService.addPromoCode(
-                newAddPromo,
-            );
+            const newPromocode = this.promoGRPCService
+                .addPromoCode(newAddPromo)
+                .pipe(catchError((e) => of({ error: e.message })));
             return newPromocode;
         } else {
             throw new BadRequestException(
@@ -52,10 +53,12 @@ export class PromocodeService {
 
     async removePromoCode(
         promocode: PromocodeRemoveDto,
-    ): Promise<Observable<IPromoCodeBoolResponse>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | any>> {
         const isExist = await this.isPromoCodeExist({ name: promocode.name });
         if (isExist) {
-            const result = this.promoGRPCService.removePromoCode(promocode);
+            const result = this.promoGRPCService
+                .removePromoCode(promocode)
+                .pipe(catchError((e) => of({ error: e.message })));
             return result;
         } else {
             throw new BadRequestException(
@@ -66,12 +69,12 @@ export class PromocodeService {
 
     async markPromoCodeAsUsed(
         promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | any>> {
         const isExist = await this.isPromoCodeExist(promocodeName);
         if (isExist) {
-            const result = this.promoGRPCService.markPromoCodeAsUsed(
-                promocodeName,
-            );
+            const result = this.promoGRPCService
+                .markPromoCodeAsUsed(promocodeName)
+                .pipe(catchError((e) => of({ error: e.message })));
             return result;
         } else {
             throw new BadRequestException(
@@ -82,12 +85,12 @@ export class PromocodeService {
 
     async isPromoCodeValid(
         promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | any>> {
         const isExist = await this.isPromoCodeExist(promocodeName);
         if (isExist) {
-            const result = this.promoGRPCService.isPromoCodeValid(
-                promocodeName,
-            );
+            const result = this.promoGRPCService
+                .isPromoCodeValid(promocodeName)
+                .pipe(catchError((e) => of({ error: e.message })));
             return result;
         } else {
             throw new BadRequestException(
@@ -96,10 +99,13 @@ export class PromocodeService {
         }
     }
 
-    async isPromoCodeExist(promocodeName: PromocodeNameDto): Promise<boolean> {
+    async isPromoCodeExist(
+        promocodeName: PromocodeNameDto,
+    ): Promise<boolean | any> {
         const isExist: boolean = await new Promise((resolve) => {
             this.promoGRPCService
                 .isPromoCodeExist(promocodeName)
+                .pipe(catchError((e) => of(e)))
                 .subscribe((value) => {
                     resolve(value.response);
                 });
