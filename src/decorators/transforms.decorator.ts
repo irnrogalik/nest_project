@@ -41,3 +41,9 @@ export function ToArray(): (target: any, key: string) => void {
         { toClassOnly: true },
     );
 }
+
+export function ToLowerCase(): PropertyDecorator {
+    return Transform((params) => params.value.toLowerCase(), {
+        toClassOnly: true,
+    });
+}

@@ -5,6 +5,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { PromocodeModule } from '../src/modules/promocode/promo.module';
 import { contextMiddleware } from './middlewares';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
@@ -23,6 +24,7 @@ import { SharedModule } from './shared/shared.module';
         OrderModule,
         UserModule,
         AuthModule,
+        PromocodeModule,
         ConfigModule.forRoot({
             envFilePath: `${process.env.NODE_ENV || 'dev'}.env`,
         }),
