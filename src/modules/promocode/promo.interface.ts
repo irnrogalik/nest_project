@@ -55,3 +55,7 @@ export interface IPageOptions {
     page: number;
     limit: number;
 }
+
+export interface IError {
+    error: string;
+}

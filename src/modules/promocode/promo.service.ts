@@ -9,6 +9,7 @@ import type { PromocodeNameDto } from './dto/PromocodeNameDto';
 import type { PromocodeRemoveDto } from './dto/PromocodeRemoveDto';
 import type {
     IAddPromoCode,
+    IError,
     IPromoCode,
     IPromoCodeBoolResponse,
     IPromoCodeService,
@@ -21,7 +22,7 @@ export class PromocodeService {
     }
     getListOfPromocodes(
         pageOptionsDto: PageOptionsDto,
-    ): Observable<IPromoCode[] | any> {
+    ): Observable<IPromoCode[] | IError> {
         const promocodes = this.promoGRPCService
             .getListOfPromocodes(pageOptionsDto)
             .pipe(catchError((e) => of({ error: e.message })));
@@ -30,7 +31,7 @@ export class PromocodeService {
 
     async addPromoCode(
         promocodeAddDto: PromocodeAddDto,
-    ): Promise<Observable<IPromoCode | any>> {
+    ): Promise<Observable<IPromoCode | IError>> {
         const isExist = await this.isPromoCodeExist({
             name: promocodeAddDto.name,
         });
@@ -53,7 +54,7 @@ export class PromocodeService {
 
     async removePromoCode(
         promocode: PromocodeRemoveDto,
-    ): Promise<Observable<IPromoCodeBoolResponse | any>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const isExist = await this.isPromoCodeExist({ name: promocode.name });
         if (isExist) {
             const result = this.promoGRPCService
@@ -69,7 +70,7 @@ export class PromocodeService {
 
     async markPromoCodeAsUsed(
         promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse | any>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const isExist = await this.isPromoCodeExist(promocodeName);
         if (isExist) {
             const result = this.promoGRPCService
@@ -85,7 +86,7 @@ export class PromocodeService {
 
     async isPromoCodeValid(
         promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse | any>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const isExist = await this.isPromoCodeExist(promocodeName);
         if (isExist) {
             const result = this.promoGRPCService
@@ -101,7 +102,7 @@ export class PromocodeService {
 
     async isPromoCodeExist(
         promocodeName: PromocodeNameDto,
-    ): Promise<boolean | any> {
+    ): Promise<boolean | IError> {
         const isExist: boolean = await new Promise((resolve) => {
             this.promoGRPCService
                 .isPromoCodeExist(promocodeName)

@@ -28,7 +28,11 @@ import { PromoCodeBoolResponseDto } from './dto/PromoCodeBoolResponseDto';
 import { PromocodeDto } from './dto/PromocodeDto';
 import { PromocodeNameDto } from './dto/PromocodeNameDto';
 import { PromocodeRemoveDto } from './dto/PromocodeRemoveDto';
-import type { IPromoCode, IPromoCodeBoolResponse } from './promo.interface';
+import type {
+    IError,
+    IPromoCode,
+    IPromoCodeBoolResponse,
+} from './promo.interface';
 import { PromocodeService } from './promo.service';
 
 @Controller('promocode')
@@ -50,7 +54,7 @@ export class PromocodeController {
     })
     getListOfPromocodes(
         @Query() pageOptionsDto: PageOptionsDto,
-    ): Observable<IPromoCode[]> {
+    ): Observable<IPromoCode[] | IError> {
         const promocodes = this.promocodeService.getListOfPromocodes(
             pageOptionsDto,
         );
@@ -68,7 +72,7 @@ export class PromocodeController {
     })
     async addPromoCode(
         @Body() promocodeAddDto: PromocodeAddDto,
-    ): Promise<Observable<IPromoCode>> {
+    ): Promise<Observable<IPromoCode | IError>> {
         const newPromocode = await this.promocodeService.addPromoCode(
             promocodeAddDto,
         );
@@ -89,7 +93,7 @@ export class PromocodeController {
     })
     async removePromoCode(
         @Body() promocode: PromocodeRemoveDto,
-    ): Promise<Observable<IPromoCodeBoolResponse>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const result = await this.promocodeService.removePromoCode(promocode);
         return result;
     }
@@ -105,7 +109,7 @@ export class PromocodeController {
     })
     async isPromoCodeValid(
         @Body() promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const result = this.promocodeService.isPromoCodeValid(promocodeName);
         return result;
     }
@@ -121,7 +125,7 @@ export class PromocodeController {
     })
     async markPromoCodeAsUsed(
         @Body() promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse>> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const result = this.promocodeService.markPromoCodeAsUsed(promocodeName);
         return result;
     }

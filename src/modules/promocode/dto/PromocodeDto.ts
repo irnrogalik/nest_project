@@ -19,17 +19,17 @@ export class PromocodeDto implements IPromoCode {
     isOneTime: boolean;
 
     @ApiProperty()
-    usedDate: string;
+    usedDate: string | null;
 
     @ApiProperty()
-    startDate: string;
+    startDate: string | null;
 
     @ApiProperty()
-    endDate: string;
+    endDate: string | null;
 
     @ApiProperty()
-    deletedAt: string;
+    deletedAt: string | null;
 
     @ApiProperty()
-    deletedReason: string;
+    deletedReason: string | null;
 }
