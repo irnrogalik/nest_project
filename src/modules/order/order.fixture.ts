@@ -140,4 +140,6 @@ export const promocode: PromocodeDto = {
     name: 'promo10',
     percent: 10,
     isOneTime: false,
+    startDate: 'Wed Jun 01 2022 10:04:59 GMT+0400 (Georgia Standard Time)',
+    endDate: 'Thu Jun 01 2023 10:04:59 GMT+0400 (Georgia Standard Time)',
 };
