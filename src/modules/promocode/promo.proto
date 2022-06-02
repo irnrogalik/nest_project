@@ -9,6 +9,7 @@ service PromoCodeService {
 	rpc MarkPromoCodeAsUsed (PromoCodeName) returns (PromoCodeBoolResponse) {}
 	rpc GetListOfPromocodes (PageOptions) returns (PromoCodeList) {}
 	rpc IsPromoCodeExist (PromoCodeName) returns (PromoCodeBoolResponse) {}
+    rpc GetPromocodeByName (PromoCodeName) returns (PromoCode) {}
 }
 
 message PromoCode {

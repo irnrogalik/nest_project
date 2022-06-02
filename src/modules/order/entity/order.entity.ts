@@ -15,5 +15,8 @@ export class OrderEntity extends AbstractEntity<OrderDto> {
     @Column()
     user_id: string | null;
 
+    @Column()
+    promocode: string | null;
+
     dtoClass = OrderDto;
 }

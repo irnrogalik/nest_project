@@ -66,9 +66,25 @@ export class OrderRepository extends Repository<OrderEntity> {
         pageOptions: PageOptionsDto,
     ): Promise<OrderEntity[]> {
         const list: OrderEntity[] = await this.query(
-            paginate('SELECT * FROM "order" WHERE user_id = $1', pageOptions),
+            paginate(
+                `SELECT * FROM "order"
+                LEFT JOIN promocode_order on promocode_order.order_id = "order".id
+                WHERE user_id = $1`,
+                pageOptions,
+            ),
             [userId],
         );
         return plainToInstance(OrderEntity, list);
+    }
+
+    async addPromocodeOrder(
+        orderId: string,
+        promocode: string,
+    ): Promise<boolean> {
+        const orderListDto: OrderListDto = await this.query(
+            'INSERT INTO promocode_order (order_Id, promocode) VALUES ($1, $2) RETURNING *',
+            [orderId, promocode],
+        );
+        return orderListDto[0] ? true : false;
     }
 }

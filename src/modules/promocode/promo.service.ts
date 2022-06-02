@@ -113,4 +113,17 @@ export class PromocodeService {
         });
         return isExist;
     }
+
+    async getPromocodeByName(
+        promocodeName: PromocodeNameDto,
+    ): Promise<IPromoCode> {
+        const promocode: IPromoCode = await new Promise((resolve) => {
+            this.promoGRPCService
+                .getPromocodeByName(promocodeName)
+                .subscribe((promo) => {
+                    resolve(promo);
+                });
+        });
+        return promocode;
+    }
 }
