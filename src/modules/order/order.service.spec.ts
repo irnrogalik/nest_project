@@ -39,7 +39,7 @@ describe('Order Service', () => {
             provide: PromocodeService,
             useFactory: () => ({
                 isPromoCodeValid: jest.fn(() => true),
-                getPromocodeByName: jest.fn(() => promocode),
+                getValidPromocodeByName: jest.fn(() => promocode),
             }),
         };
         const app: TestingModule = await Test.createTestingModule({

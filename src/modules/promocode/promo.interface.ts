@@ -15,7 +15,7 @@ export interface IPromoCodeService {
     isPromoCodeExist(
         promoName: IPromoCodeName,
     ): Observable<IPromoCodeBoolResponse>;
-    getPromocodeByName(promoName: IPromoCodeName): Observable<IPromoCode>;
+    getPromoCodeByName(promoName: IPromoCodeName): Observable<IPromoCode>;
 }
 
 export interface IPromoCode {

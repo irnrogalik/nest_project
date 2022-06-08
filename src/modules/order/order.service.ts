@@ -7,7 +7,6 @@ import {
 import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { toDecimal, toInteger } from '../../shared/functions';
 import type { ProductInCartDto } from '../product/dto/ProductInCartDto';
-import type { PromocodeNameDto } from '../promocode/dto/PromocodeNameDto';
 import type { IPromoCode } from '../promocode/promo.interface';
 import { PromocodeService } from '../promocode/promo.service';
 import type { CartFullDto } from './dto/CartFullDto';
@@ -37,7 +36,9 @@ export class OrderService {
             cartDto.products,
         );
         if (cartDto.promocode) {
-            promocode = await this.getPromocode(cartDto.promocode);
+            promocode = await this.promocodeService.getValidPromocodeByName(
+                cartDto.promocode,
+            );
         }
         const cartList: CartFullDto = this.getFinalOrderListInCart(
             products,
@@ -56,12 +57,11 @@ export class OrderService {
                 total: 0,
                 orderTax: 0,
             },
-            promocode: '',
+            promocode: promocode?.name,
         };
         let additionalDiscount = 0;
         if (promocode && promocode.percent) {
             additionalDiscount = promocode.percent;
-            orderListInCart.promocode = promocode.name;
         }
 
         for (const product of products) {
@@ -96,19 +96,13 @@ export class OrderService {
         const order: Partial<OrderDto> = await this.orderRepository.addOrder(
             orderList.order,
             userId,
+            orderList?.promocode,
         );
         if (!order) {
             throw new BadRequestException('The order was not created');
         }
         const orderId: string = order.id;
         await this.addOrderList(orderId, orderList.products);
-        if (cartDto.promocode) {
-            const promocode = await this.getPromocode(cartDto.promocode);
-            await this.orderRepository.addPromocodeOrder(
-                orderId,
-                promocode.name,
-            );
-        }
         return orderList;
     }
 
@@ -151,14 +145,5 @@ export class OrderService {
             pageOptions,
         );
         return orderList.toDtos();
-    }
-
-    async getPromocode(promocodeName: string): Promise<IPromoCode> {
-        const promo: PromocodeNameDto = { name: promocodeName };
-        const isValid = await this.promocodeService.isPromoCodeValid(promo);
-        if (isValid) {
-            const promocode = this.promocodeService.getPromocodeByName(promo);
-            return promocode;
-        }
     }
 }

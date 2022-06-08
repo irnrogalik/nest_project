@@ -37,10 +37,16 @@ export class OrderRepository extends Repository<OrderEntity> {
     async addOrder(
         order: Partial<OrderDto>,
         userId: string,
+        promocode: string,
     ): Promise<OrderEntity> {
         const newOrder: OrderEntity[] = await this.query(
-            'INSERT INTO "order" (order_tax, total, user_id) VALUES ($1, $2, $3) RETURNING *',
-            [toInteger(order.orderTax), toInteger(order.total), userId],
+            'INSERT INTO "order" (order_tax, total, user_id, promocode) VALUES ($1, $2, $3, $4) RETURNING *',
+            [
+                toInteger(order.orderTax),
+                toInteger(order.total),
+                userId,
+                promocode,
+            ],
         );
         return plainToInstance(OrderEntity, newOrder[0]);
     }
@@ -75,16 +81,5 @@ export class OrderRepository extends Repository<OrderEntity> {
             [userId],
         );
         return plainToInstance(OrderEntity, list);
-    }
-
-    async addPromocodeOrder(
-        orderId: string,
-        promocode: string,
-    ): Promise<boolean> {
-        const orderListDto: OrderListDto = await this.query(
-            'INSERT INTO promocode_order (order_Id, promocode) VALUES ($1, $2) RETURNING *',
-            [orderId, promocode],
-        );
-        return orderListDto[0] ? true : false;
     }
 }

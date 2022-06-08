@@ -82,7 +82,7 @@ export const cartList: CartFullDto = {
         },
     ],
     order: { total: 126.98, orderTax: 10 },
-    promocode: '',
+    promocode: undefined,
 };
 
 export const cartListWithPromocode: CartFullDto = {
@@ -136,10 +136,10 @@ export const orderListDto: OrderDto[] = orderListEntity.toDtos();
 
 export const promocode: PromocodeDto = {
     id: '6ff628b0-7dd1-40fd-9d00-1298d5037eb3',
-    createdAt: 'Wed Jun 01 2022 10:04:59 GMT+0400 (Georgia Standard Time)',
+    createdAt: '1654063499000',
     name: 'promo10',
     percent: 10,
     isOneTime: false,
-    startDate: 'Wed Jun 01 2022 10:04:59 GMT+0400 (Georgia Standard Time)',
-    endDate: 'Thu Jun 01 2023 10:04:59 GMT+0400 (Georgia Standard Time)',
+    startDate: '1654063499000',
+    endDate: '1685599499000',
 };

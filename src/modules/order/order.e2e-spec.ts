@@ -5,7 +5,7 @@ import supertest from 'supertest';
 import { AppModule } from '../../app.module';
 import type { ITokensResult } from '../../test/helpers';
 import { getListOfTokensForTest } from '../../test/helpers';
-import type { CartDto } from './dto/CartDto';
+import type { CartWithPromocodeDto } from './dto/CartWithPromocodeDto';
 
 function createTestModule() {
     return Test.createTestingModule({
@@ -16,9 +16,9 @@ function createTestModule() {
 describe('Test guards for order.controller', () => {
     let app: INestApplication;
     let tokens: ITokensResult;
-    const cart: CartDto[] = [
-        { id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', quantity: 1 },
-    ];
+    const cart: CartWithPromocodeDto = {
+        products: [{ id: '3ab7fed8-7270-482a-8e83-f2e4c6ae64cb', quantity: 1 }],
+    };
 
     beforeAll(async () => {
         app = (await createTestModule()).createNestApplication();
