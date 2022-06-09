@@ -86,7 +86,7 @@ export class PromocodeService {
 
     async isPromoCodeValid(
         promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse | IError> | boolean> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const isExist = await this.isPromoCodeExist(promocodeName);
         if (isExist) {
             const result = this.promoGRPCService
@@ -94,7 +94,9 @@ export class PromocodeService {
                 .pipe(catchError((e) => of({ error: e.message })));
             return result;
         } else {
-            return false;
+            throw new BadRequestException(
+                `The promocode ${promocodeName.name} doesn't exist`,
+            );
         }
     }
 
@@ -125,7 +127,9 @@ export class PromocodeService {
         return promocode;
     }
 
-    async getValidPromocodeByName(promocodeName: string): Promise<IPromoCode> {
+    async getValidPromocodeByName(
+        promocodeName: string,
+    ): Promise<IPromoCode | undefined> {
         const promo: PromocodeNameDto = { name: promocodeName };
         const isValid = await this.isPromoCodeValid(promo);
         if (isValid) {

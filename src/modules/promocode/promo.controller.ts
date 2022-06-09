@@ -109,7 +109,7 @@ export class PromocodeController {
     })
     async isPromoCodeValid(
         @Body() promocodeName: PromocodeNameDto,
-    ): Promise<Observable<IPromoCodeBoolResponse | IError> | boolean> {
+    ): Promise<Observable<IPromoCodeBoolResponse | IError>> {
         const result = this.promocodeService.isPromoCodeValid(promocodeName);
         return result;
     }
