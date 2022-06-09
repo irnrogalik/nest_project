@@ -132,11 +132,6 @@ export class PromocodeService {
     ): Promise<IPromoCode | undefined> {
         const promo: PromocodeNameDto = { name: promocodeName };
         const isValid = await this.isPromoCodeValid(promo);
-        if (isValid) {
-            const promocode = await this.getPromoCodeByName(promo);
-            return promocode;
-        } else {
-            return undefined;
-        }
+        return isValid ? this.getPromoCodeByName(promo) : undefined;
     }
 }
