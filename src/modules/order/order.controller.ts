@@ -29,8 +29,8 @@ import { AdminJwtAuthGuard } from '../auth/admin/guard/admin.jwt-auth.guard';
 import { JwtAuthGuard } from '../auth/user/guard/jwt-auth.guard';
 import { Role } from '../user/role.enum';
 import { RoleGuard } from '../user/role.guard';
-import { CartDto } from './dto/CartDto';
 import { CartFullDto } from './dto/CartFullDto';
+import { CartWithPromocodeDto } from './dto/CartWithPromocodeDto';
 import { OrderDto } from './dto/OrderDto';
 import { OrderService } from './order.service';
 
@@ -71,8 +71,8 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during getting cart',
     })
-    @ApiBody({ type: [CartDto] })
-    async getCart(@Body() cartDto: CartDto[]): Promise<CartFullDto> {
+    @ApiBody({ type: CartWithPromocodeDto })
+    async getCart(@Body() cartDto: CartWithPromocodeDto): Promise<CartFullDto> {
         const cart: CartFullDto = await this.orderService.getCart(cartDto);
         return cart;
     }
@@ -89,9 +89,8 @@ export class OrderController {
     @ApiBadRequestResponse({
         description: 'Error occurred during adding order',
     })
-    @ApiBody({ type: [CartDto] })
     async addOrder(
-        @Body() cartDto: CartDto[],
+        @Body() cartDto: CartWithPromocodeDto,
         @Request() req: { user: JwtUserPayload },
     ): Promise<CartFullDto> {
         const user: JwtUserPayload = req.user;

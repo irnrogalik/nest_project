@@ -7,8 +7,10 @@ import {
 import type { PageOptionsDto } from '../../common/dto/PageOptionsDto';
 import { toDecimal, toInteger } from '../../shared/functions';
 import type { ProductInCartDto } from '../product/dto/ProductInCartDto';
-import type { CartDto } from './dto/CartDto';
+import type { IPromoCode } from '../promocode/promo.interface';
+import { PromocodeService } from '../promocode/promo.service';
 import type { CartFullDto } from './dto/CartFullDto';
+import type { CartWithPromocodeDto } from './dto/CartWithPromocodeDto';
 import type { OrderDto } from './dto/OrderDto';
 import type { OrderListDto } from './dto/OrderListDto';
 import type { OrderEntity } from './entity/order.entity';
@@ -16,7 +18,10 @@ import { OrderRepository } from './order.repository';
 
 @Injectable()
 export class OrderService {
-    constructor(public readonly orderRepository: OrderRepository) {}
+    constructor(
+        public readonly orderRepository: OrderRepository,
+        private promocodeService: PromocodeService,
+    ) {}
 
     async getOrderList(pageOptions: PageOptionsDto): Promise<OrderDto[]> {
         const orderList: OrderEntity[] = await this.orderRepository.getOrderList(
@@ -25,25 +30,45 @@ export class OrderService {
         return orderList.toDtos();
     }
 
-    async getCart(cartDto: CartDto[]): Promise<CartFullDto> {
+    async getCart(cartDto: CartWithPromocodeDto): Promise<CartFullDto> {
+        let promocode: IPromoCode;
         const products: ProductInCartDto[] = await this.orderRepository.getProductsInCart(
-            cartDto,
+            cartDto.products,
         );
-        const cartList: CartFullDto = this.getFinalOrderListInCart(products);
+        if (cartDto.promocode) {
+            promocode = await this.promocodeService.getValidPromocodeByName(
+                cartDto.promocode,
+            );
+        }
+        const cartList: CartFullDto = this.getFinalOrderListInCart(
+            products,
+            promocode,
+        );
         return cartList;
     }
 
-    getFinalOrderListInCart(products: ProductInCartDto[]): CartFullDto {
+    getFinalOrderListInCart(
+        products: ProductInCartDto[],
+        promocode: IPromoCode,
+    ): CartFullDto {
         const orderListInCart: CartFullDto = {
             products: [],
             order: {
                 total: 0,
                 orderTax: 0,
             },
+            promocode: promocode?.name,
         };
+        let additionalDiscount = 0;
+        if (promocode && promocode.percent) {
+            additionalDiscount = promocode.percent;
+        }
 
         for (const product of products) {
-            const amount = (toInteger(product.amount) || 0) * product.quantity;
+            let amount = (toInteger(product.amount) || 0) * product.quantity;
+            if (additionalDiscount) {
+                amount = amount - (amount / 100) * additionalDiscount;
+            }
             const taxValue = product.taxValue;
             let tax = 0;
 
@@ -63,11 +88,15 @@ export class OrderService {
         return orderListInCart;
     }
 
-    async addOrder(cartDto: CartDto[], userId: string): Promise<CartFullDto> {
+    async addOrder(
+        cartDto: CartWithPromocodeDto,
+        userId: string,
+    ): Promise<CartFullDto> {
         const orderList: CartFullDto = await this.getCart(cartDto);
         const order: Partial<OrderDto> = await this.orderRepository.addOrder(
             orderList.order,
             userId,
+            orderList?.promocode,
         );
         if (!order) {
             throw new BadRequestException('The order was not created');

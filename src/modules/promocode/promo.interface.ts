@@ -15,6 +15,7 @@ export interface IPromoCodeService {
     isPromoCodeExist(
         promoName: IPromoCodeName,
     ): Observable<IPromoCodeBoolResponse>;
+    getPromoCodeByName(promoName: IPromoCodeName): Observable<IPromoCode>;
 }
 
 export interface IPromoCode {
@@ -23,11 +24,11 @@ export interface IPromoCode {
     createdAt: string;
     percent: number;
     isOneTime: boolean;
-    usedDate: string;
-    startDate: string;
-    endDate: string;
-    deletedAt: string;
-    deletedReason: string;
+    usedDate?: string;
+    startDate?: string;
+    endDate?: string;
+    deletedAt?: string;
+    deletedReason?: string;
 }
 
 export interface IAddPromoCode {

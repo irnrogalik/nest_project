@@ -5,11 +5,11 @@ import dotenv from 'dotenv';
 import { SnakeNamingStrategy } from './src/snake-naming.strategy';
 
 if (!(<any>module).hot /* for webpack HMR */) {
-    process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+    process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 }
 
 dotenv.config({
-    path: `.${process.env.NODE_ENV}.env`,
+    path: `${process.env.NODE_ENV}.env`,
 });
 
 // Replace \\n with \n to support multiline strings in AWS

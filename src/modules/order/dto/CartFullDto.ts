@@ -9,4 +9,7 @@ export class CartFullDto {
 
     @ApiProperty({ type: OrderDto })
     order: Partial<OrderDto>;
+
+    @ApiProperty()
+    promocode?: string;
 }

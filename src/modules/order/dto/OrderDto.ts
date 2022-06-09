@@ -16,10 +16,14 @@ export class OrderDto extends AbstractDto {
     @ApiProperty()
     userId: string | null;
 
+    @ApiProperty()
+    promocode: string | null;
+
     constructor(order: OrderEntity) {
         super(order);
         this.orderTax = order.order_tax;
         this.total = order.total;
         this.userId = order.user_id;
+        this.promocode = order.promocode;
     }
 }

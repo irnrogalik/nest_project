@@ -3,14 +3,18 @@ import '../../boilerplate.polyfill';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
+import { PromocodeService } from '../promocode/promo.service';
 import {
-    cartDto,
+    cartDtoWithoutPromocode,
+    cartDtoWithPromocode,
     cartList,
+    cartListWithPromocode,
     getProductsInCart,
     orderListDto,
     orderListEntity,
     orderToRemove,
     pageOptions,
+    promocode,
     userId,
 } from './order.fixture';
 import { OrderRepository } from './order.repository';
@@ -26,31 +30,64 @@ describe('Order Service', () => {
                 getProductsInCart: jest.fn(() => getProductsInCart),
                 addOrder: jest.fn(() => cartList),
                 addOrderList: jest.fn(() => true),
+                addPromocodeOrder: jest.fn(() => true),
                 removeOrder: jest.fn(() => true),
                 getOrderList: jest.fn(() => orderListEntity),
             }),
         };
+        const PromocodeServiceProvider = {
+            provide: PromocodeService,
+            useFactory: () => ({
+                isPromoCodeValid: jest.fn(() => true),
+                getValidPromocodeByName: jest.fn(() => promocode),
+            }),
+        };
         const app: TestingModule = await Test.createTestingModule({
-            providers: [OrderRepositoryProvider, OrderService],
+            providers: [
+                OrderRepositoryProvider,
+                OrderService,
+                PromocodeServiceProvider,
+            ],
         }).compile();
 
         orderService = app.get<OrderService>(OrderService);
     });
 
-    describe('get cart set', () => {
+    describe('get cart set without promocode', () => {
         it('should return list of products in cart', async () => {
-            const result = await orderService.getCart(cartDto);
+            const result = await orderService.getCart(cartDtoWithoutPromocode);
             expect(result).toEqual(cartList);
             expect(result.order.orderTax).toEqual(cartList.order.orderTax);
             expect(result.order.total).toEqual(cartList.order.total);
         });
     });
 
-    describe('add product', () => {
-        it('should return created order', async () => {
-            expect(await orderService.addOrder(cartDto, userId)).toEqual(
-                cartList,
+    describe('get cart set with promocode', () => {
+        it('should return list of products in cart', async () => {
+            const result = await orderService.getCart(cartDtoWithPromocode);
+            expect(result).toEqual(cartListWithPromocode);
+            expect(result.order.orderTax).toEqual(
+                cartListWithPromocode.order.orderTax,
             );
+            expect(result.order.total).toEqual(
+                cartListWithPromocode.order.total,
+            );
+        });
+    });
+
+    describe('add order without promocode', () => {
+        it('should return created order', async () => {
+            expect(
+                await orderService.addOrder(cartDtoWithoutPromocode, userId),
+            ).toEqual(cartList);
+        });
+    });
+
+    describe('add order with promocode', () => {
+        it('should return created order with promocode', async () => {
+            expect(
+                await orderService.addOrder(cartDtoWithPromocode, userId),
+            ).toEqual(cartListWithPromocode);
         });
     });
 
