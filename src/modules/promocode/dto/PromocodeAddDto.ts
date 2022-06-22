@@ -23,8 +23,8 @@ export class PromocodeAddDto implements IAddPromoCode {
     isOneTime = false;
 
     @ApiPropertyOptional({ default: null })
-    startDate: Date = null;
+    startDate?: Date = null;
 
     @ApiPropertyOptional({ default: null })
-    endDate: Date = null;
+    endDate?: Date = null;
 }

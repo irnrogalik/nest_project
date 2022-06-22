@@ -35,8 +35,8 @@ export interface IAddPromoCode {
     name: string;
     percent: number;
     isOneTime: boolean;
-    startDate: string | Date;
-    endDate: string | Date;
+    startDate?: string | Date;
+    endDate?: string | Date;
 }
 
 export interface IPromoCodeName {
