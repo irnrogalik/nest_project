@@ -1,6 +1,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 
+import { ClientGrpcMock } from './promo.client.mock';
 import {
     listOfPromocodes,
     pageOptions,
@@ -9,14 +10,7 @@ import {
     promocodeToAdd,
     promocodeToRemove,
 } from './promo.fixture';
-import { MockPromoCodeService } from './promo.mock.service';
 import { PromocodeService } from './promo.service';
-
-class ClientGrpcMock {
-    getService() {
-        return new MockPromoCodeService();
-    }
-}
 
 describe('Promocode Service', () => {
     let promocodeService: PromocodeService;
